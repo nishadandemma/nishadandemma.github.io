@@ -14,7 +14,7 @@ export class MiniCrossword extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'assets/eucalyptus.png');
+        this.load.image('background', 'assets/background9x16.png');
     }
 
     create() {
@@ -23,7 +23,7 @@ export class MiniCrossword extends Phaser.Scene {
         this.center_width = this.width / 2;
         this.center_height = this.height / 2;
         this.enabled = true;
-        this.background = this.add.tileSprite(this.center_width, this.center_height, 500, 800, 'background');
+        this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
         this.addMenuButton();
         this.addTitle();
         this.createBoard();
@@ -33,7 +33,7 @@ export class MiniCrossword extends Phaser.Scene {
 
     addMenuButton() {
         this.menuButton = this.add
-            .bitmapText(45, 25, "mario", "Menu", 20)
+            .bitmapText(75, 25, "nougat", "<Menu", 45)
             .setOrigin(0.5)
             .setTint(0xff0000)
           //  .setDropShadow(2, 3, 0x693600, 0.7);
@@ -52,7 +52,7 @@ export class MiniCrossword extends Phaser.Scene {
     }
 
     addTitle() {
-      this.add.bitmapText(this.center_width, 40, "mario", "MINICROSSWORD", 40).setOrigin(0.5).setDropShadow(3, 4, 0x222222, 0.7);
+      this.add.bitmapText(this.center_width, 100, "nougat", "MINICROSSWORD", 100).setOrigin(0.5);//.setDropShadow(3, 4, 0x222222, 0.7);
     }
 
     createBoard() {
@@ -81,19 +81,33 @@ export class MiniCrossword extends Phaser.Scene {
       const alphabet = "qwertyuiop-asdfghjkl-zxcvbnm";
       this.keyboard = {};
       let stepY = 0;
-      let stepX = -32;
-      let x = -32;
+      let stepX = 0;// -32;
+      let x = 0;//-32;
       let y = 0;
-      this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
+      let level = 1;
+      //this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
       alphabet.split("").forEach((letter, i) => {
         const isDash = letter === "-";
-        x = stepX ;
-        stepY += isDash ? 48 : 0 
-        stepX = isDash ? -32 : stepX + 48;
+        //x = stepX ;
+        switch (level) {
+          case 1:
+            x = stepX;
+            break;
+          case 2:
+            x = stepX + 43;
+            break;
+          case 3:
+            x = stepX + 129;
+            break;
+        }
+        stepY += isDash ? 86 : 0//48 : 0 
+        stepX = isDash ? 0 : stepX + 86//48;
         y = 640 + stepY;
 
-        if (isDash) return;
-
+        if (isDash) {
+          level = level + 1;
+          return;
+        }
         const key = new Key(this, x, y, letter)
         this.keyboard[letter] = key;
       })

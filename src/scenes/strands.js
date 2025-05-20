@@ -17,7 +17,7 @@ export class Strands extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'assets/eucalyptus.png');
+        this.load.image('background', 'assets/background9x16.png');
     }
 
     create() {
@@ -26,7 +26,7 @@ export class Strands extends Phaser.Scene {
         this.center_width = this.width / 2;
         this.center_height = this.height / 2;
         this.enabled = true;
-        this.background = this.add.tileSprite(this.center_width, this.center_height, 500, 800, 'background');
+        this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
         this.addMenuButton();
         this.addTitle();
         this.createBoard();
@@ -38,7 +38,7 @@ export class Strands extends Phaser.Scene {
 
     addMenuButton() {
         this.menuButton = this.add
-            .bitmapText(45, 25, "mario", "Menu", 20)
+            .bitmapText(75, 25, "nougat", "<Menu", 45)
             .setOrigin(0.5)
             .setTint(0xff0000)
           //  .setDropShadow(2, 3, 0x693600, 0.7);
@@ -78,7 +78,7 @@ export class Strands extends Phaser.Scene {
     }
 
     addTitle() {
-      this.add.bitmapText(this.center_width, 40, "mario", "STRANDS", 40).setOrigin(0.5).setDropShadow(3, 4, 0x222222, 0.7);
+      this.add.bitmapText(this.center_width, 100, "nougat", "STRANDS", 100).setOrigin(0.5);//.setDropShadow(3, 4, 0x222222, 0.7);
     }
 
     addGuess(letter) {

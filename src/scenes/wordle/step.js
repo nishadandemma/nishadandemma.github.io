@@ -10,10 +10,10 @@ export default class Step extends Phaser.GameObjects.Container {
         this.square = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 48, 48, 0xffffff).setOrigin(0.5)
         this.add(this.square);
 
-        this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
-        this.add(this.keycup);
+        //this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
+        //this.add(this.keycup);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "mario", this.letter.toUpperCase(), 40).setTint(0x000000).setOrigin(0.5)
+        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 40).setTint(0x000000).setOrigin(0.5)
         this.add(this.letterText);
     }
 

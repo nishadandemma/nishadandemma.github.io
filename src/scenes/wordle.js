@@ -19,7 +19,7 @@ export class Wordle extends Phaser.Scene {
   }
 
     preload () {
-        this.load.image('background', 'assets/eucalyptus.png');
+        this.load.image('background', 'assets/background9x16.png');
 
     }
 
@@ -31,7 +31,7 @@ export class Wordle extends Phaser.Scene {
       this.center_height = this.height / 2;
       //this.add.tileSprite(0, 0, 1800, 1800, "background").setOrigin(0.5);
       //this.cameras.main.setBackgroundColor(0xffffff);
-      this.background = this.add.tileSprite(this.center_width, this.center_height, 500, 800, 'background');
+      this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
       this.addMenuButton();
       this.loadWord();
       console.log(this.wordToGuess);
@@ -48,7 +48,7 @@ export class Wordle extends Phaser.Scene {
 
     addMenuButton() {
         this.menuButton = this.add
-            .bitmapText(45, 25, "mario", "Menu", 20)
+            .bitmapText(75, 25, "nougat", "<Menu", 45)
             .setOrigin(0.5)
             .setTint(0xff0000)
           //  .setDropShadow(2, 3, 0x693600, 0.7);
@@ -75,17 +75,15 @@ export class Wordle extends Phaser.Scene {
     }
 
     addTitle() {
-      this.add.bitmapText(this.center_width, 40, "mario", "WORDLE", 40).setOrigin(0.5).setDropShadow(3, 4, 0x222222, 0.7);
+      this.add.bitmapText(this.center_width, 100, "nougat", "WORDLE", 100).setOrigin(0.5);//.setDropShadow(3, 4, 0x222222, 0.7);
     }
 
 
     addSteps () {
       const alphabet = "qwertyuiop-asdfghjkl-zxcvbnm";
       this.steps = [];
-      let stepY = 0;
-      let stepX = 56;
       let x = 56;
-      let y = 100;
+      let y = 200;
 
       Array(6).fill(0).forEach((letter, i) => {
         this.steps.push([])
@@ -104,31 +102,46 @@ export class Wordle extends Phaser.Scene {
       const alphabet = "qwertyuiop-asdfghjkl-zxcvbnm";
       this.keyboard = {};
       let stepY = 0;
-      let stepX = -32;
-      let x = -32;
+      let stepX = 0;// -32;
+      let x = 0;//-32;
       let y = 0;
-      this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
+      let level = 1;
+      //this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
       alphabet.split("").forEach((letter, i) => {
         const isDash = letter === "-";
-        x = stepX ;
-        stepY += isDash ? 48 : 0 
-        stepX = isDash ? -32 : stepX + 48;
-        y = 640 + stepY;
+        //x = stepX ;
+        switch (level) {
+          case 1:
+            x = stepX;
+            break;
+          case 2:
+            x = stepX + 43;
+            break;
+          case 3:
+            x = stepX + 129;
+            break;
+        }
+        stepY += isDash ? 86 : 0//48 : 0 
+        stepX = isDash ? 0 : stepX + 86//48;
+        y = 1280 + stepY;
 
-        if (isDash) return;
-
+        if (isDash) {
+          level = level + 1;
+          return;
+        }
         const key = new Key(this, x, y, letter)
         this.keyboard[letter] = key;
       })
 
-      this.keyboard["ok"] = new Key(this, x + 48, y, "ok");
-      this.keyboard["-"] = new Key(this, x + 96, y, "-");
+      //this.keyboard["ok"] = new Key(this, x + 48, y, "ok");
+      //this.keyboard["-"] = new Key(this, x + 96, y, "-");
+      
       //this.keyboard["--"] = new Key(this, x + 144, y, "--");
-      this.helpText = this.add.bitmapText(this.center_width, 630, "mario", "", 30).setTint(0x4d4d4d).setOrigin(0.5)
+      this.helpText = this.add.bitmapText(this.center_width, 630, "lemonmilk", "", 30).setTint(0x4d4d4d).setOrigin(0.5)
     }
 
     addResult () {
-      this.resultText = this.add.bitmapText(this.center_width, 580, "mario", "", 40).setTint(0x000000).setOrigin(0.5)
+      this.resultText = this.add.bitmapText(this.center_width, 580, "lemonmilk", "", 40).setTint(0x000000).setOrigin(0.5)
     }
 
     finishScene () {

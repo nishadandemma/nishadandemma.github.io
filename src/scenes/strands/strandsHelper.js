@@ -6,3 +6,4 @@ export default class StrandsHelper {// extends Phaser.Scene {
         this.outcome = "playing";
         this.init();
     }
+}

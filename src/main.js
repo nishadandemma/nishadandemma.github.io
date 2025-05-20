@@ -8,8 +8,8 @@ const config = {
     type: Phaser.AUTO,//tried WebGL first, then Canvas if not available
     title: 'NYT Gamez',
     parent: 'game-container',
-    width: 500,
-    height: 800,
+    width: 900,//500,
+    height: 1600,//800,
     pixelArt: false,
     scene: [
         Start,

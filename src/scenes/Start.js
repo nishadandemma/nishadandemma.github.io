@@ -7,12 +7,21 @@ export class Start extends Phaser.Scene
 
     preload()
     {
-        this.load.image('background', 'assets/eucalyptus.png');
-        this.load.image('title', 'assets/title.png');      
+        this.load.image('background', 'assets/background9x16.png');
+        this.load.image('title', 'assets/title2.png');      
+        this.load.image('wordle', 'assets/wordlebutton.png');
+        this.load.image('strands', 'assets/strandsbutton.png');
+        this.load.image('connections', 'assets/connectionsbutton.png');
+        this.load.image('mini', 'assets/minibutton.png');
         this.load.bitmapFont(
-            "mario",
-            "assets/fonts/mario.png",
-            "assets/fonts/mario.xml"
+            "lemonmilk",
+            "assets/fonts/lemonmilk.png",
+            "assets/fonts/lemonmilk.xml"
+        );
+        this.load.bitmapFont(
+            "nougat",
+            "assets/fonts/nougattest.png",
+            "assets/fonts/nougattest.xml"
         );
         this.width = this.sys.game.config.width;
         this.height = this.sys.game.config.height;
@@ -23,6 +32,7 @@ export class Start extends Phaser.Scene
         this.load.image("letter", "assets/letter.png");
         this.load.image("dot", "assets/red_dot.png");
         this.load.spritesheet("keycup", "assets/keycup.png", { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet("keycup2", "assets/keycup2.png", { frameWidth: 86, frameHeight: 86 });
     //    this.load.image('connections', 'assets/blue.png');
     //    this.load.image('minicrossword', 'assets/blue.png');
     //    this.load.image('strands', 'assets/blue.png');
@@ -40,114 +50,70 @@ export class Start extends Phaser.Scene
 
 
     addConnectionsButton() {
-        this.connectionsButton = this.add
-            .bitmapText(150, 360, "mario", "Connections", 15)
-            .setOrigin(0.5)
-            .setTint(0xffe066)
-          //  .setDropShadow(2, 3, 0x693600, 0.7);
+        this.connectionsButton = this.add.tileSprite(275, 1150, 300, 300, 'connections');
         this.connectionsButton.setInteractive();
         this.connectionsButton.on("pointerdown", () => {
             //this.sound.add("move").play(); //maybe add sound effects when clicked?
             this.startConnections();
         });
-        this.connectionsButton.on("pointerover", () => {
+        /*this.connectionsButton.on("pointerover", () => {
             this.connectionsButton.setTint(0x3e6875);
         });
         this.connectionsButton.on("pointerout", () => {
             this.connectionsButton.setTint(0xffe066);
-        });
-        this.tweens.add({
-            targets: this.space,
-            duration: 300,
-            alpha: { from: 0, to: 1 },
-            repeat: -1,
-            yoyo: true,
-        });
+        });*/
     }
 
     addWordleButton() {
-        this.wordleButton = this.add
-            .bitmapText(350, 360, "mario", "Wordle", 15)
-            .setOrigin(0.5)
-            .setTint(0xffe066)
-         //   .setDropShadow(2, 3, 0x693600, 0.7);
+        this.wordleButton = this.add.tileSprite(275, 800, 300, 300, 'wordle');
         this.wordleButton.setInteractive();
         this.wordleButton.on("pointerdown", () => {
             //this.sound.add("move").play(); //maybe add sound effects when clicked?
             this.startWordle();
         });
-        this.wordleButton.on("pointerover", () => {
+        /*this.wordleButton.on("pointerover", () => {
             this.wordleButton.setTint(0x3e6875);
         });
         this.wordleButton.on("pointerout", () => {
             this.wordleButton.setTint(0xffe066);
-        });
-        this.tweens.add({
-            targets: this.space,
-            duration: 300,
-            alpha: { from: 0, to: 1 },
-            repeat: -1,
-            yoyo: true,
-        });
+        });*/
     }
 
      addStrandsButton() {
-        this.strandsButton = this.add
-            .bitmapText(150, 450, "mario", "Strands", 15)
-            .setOrigin(0.5)
-            .setTint(0xffe066)
-           // .setDropShadow(2, 3, 0x693600, 0.7);
+        this.strandsButton = this.add.tileSprite(625, 800, 300, 300, 'strands');
         this.strandsButton.setInteractive();
         this.strandsButton.on("pointerdown", () => {
             //this.sound.add("move").play(); //maybe add sound effects when clicked?
             this.startStrands();
         });
-        this.strandsButton.on("pointerover", () => {
+        /*this.strandsButton.on("pointerover", () => {
             this.strandsButton.setTint(0x3e6875);
         });
         this.strandsButton.on("pointerout", () => {
             this.strandsButton.setTint(0xffe066);
-        });
-        this.tweens.add({
-            targets: this.space,
-            duration: 300,
-            alpha: { from: 0, to: 1 },
-            repeat: -1,
-            yoyo: true,
-        });
+        });*/
     }
 
     addMiniCrosswordButton() {
-        this.miniCrosswordButton = this.add
-            .bitmapText(350, 450, "mario", "Mini-Crossword", 15)
-            .setOrigin(0.5)
-            .setTint(0xffe066)
-         //   .setDropShadow(2, 3, 0x693600, 0.7);
+        this.miniCrosswordButton = this.add.tileSprite(625, 1150, 300, 300, 'mini');
         this.miniCrosswordButton.setInteractive();
         this.miniCrosswordButton.on("pointerdown", () => {
             //this.sound.add("move").play(); //maybe add sound effects when clicked?
             this.startMiniCrossword();
         });
-        this.miniCrosswordButton.on("pointerover", () => {
+        /*this.miniCrosswordButton.on("pointerover", () => {
             this.miniCrosswordButton.setTint(0x3e6875);
         });
         this.miniCrosswordButton.on("pointerout", () => {
             this.miniCrosswordButton.setTint(0xffe066);
-        });
-        this.tweens.add({
-            targets: this.space,
-            duration: 300,
-            alpha: { from: 0, to: 1 },
-            repeat: -1,
-            yoyo: true,
-        });
+        });*/
     }
 
     create()
     {
-        this.background = this.add.tileSprite(this.center_width, this.center_height, 500, 800, 'background');
 
-        this.title = this.add.image(window.innerWidth / 2, 100, 'title');
+        this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
+        this.title = this.add.image(this.center_width, 225, 'title');
 
     //    const connections = this.add.image(500, 360, 'connections');
     //    const minicrossword = this.add.image(700, 360, 'minicrossword');

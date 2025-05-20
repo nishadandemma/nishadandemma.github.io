@@ -12,7 +12,7 @@ export default class Tile extends Phaser.GameObjects.Container {
         //this.tile = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
         //this.add(this.tile);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "mario", letter, 20).setTint(0x000000).setOrigin(0.5)
+        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", letter, 20).setTint(0x000000).setOrigin(0.5)
         this.add(this.wordText);
         this.setListeners();
 

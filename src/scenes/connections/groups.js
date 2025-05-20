@@ -13,7 +13,7 @@ export default class Groups extends Phaser.GameObjects.Container {
         //this.add(this.dot);
         this.block = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 364, 69, 0x670eed, 0.0).setOrigin(0.5);
         this.add(this.block);        //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.groupText = new Phaser.GameObjects.BitmapText(this.scene, 206, 32, "mario", "", 10).setTint(0x210152).setOrigin(0.5).setAlpha(0.0);
+        this.groupText = new Phaser.GameObjects.BitmapText(this.scene, 206, 32, "lemonmilk", "", 10).setTint(0x210152).setOrigin(0.5).setAlpha(0.0);
         this.add(this.groupText);
         //this.setListeners();
 

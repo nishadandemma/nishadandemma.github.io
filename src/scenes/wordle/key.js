@@ -9,9 +9,9 @@ export default class Key extends Phaser.GameObjects.Container {
         this.square = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 48, 48, 0x666666).setOrigin(0.5)
         this.add(this.square);
 
-        this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "keycup").setOrigin(0.5);
+        this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "keycup2").setOrigin(0.5);
         this.add(this.keycup);
-        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "mario", this.letter.toUpperCase(), 30).setOrigin(0.5)
+        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 60).setOrigin(.65)
         this.add(this.letterText);
 
         this.setListeners();
