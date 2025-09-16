@@ -9,7 +9,7 @@ export default class Chance extends Phaser.GameObjects.Container {
         // this.word = word// === "ñ" ? "n" : letter;
         this.scene.add.existing(this);
         // this.selected = 0;
-        this.dot = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "dot").setOrigin(0.5);
+        this.dot = new Phaser.GameObjects.Sprite(this.scene, 0, 0, "star").setOrigin(0.5);
         this.add(this.dot);
         //this.cover = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 48, 48, 0xda0b5b , 0.25).setOrigin(0.5)
         //this.add(this.cover);        //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
@@ -20,7 +20,7 @@ export default class Chance extends Phaser.GameObjects.Container {
     }
 
     setOpacity() {
-        this.dot.setAlpha(0);
+        this.dot.setAlpha(0.0);
     }
     /*
     setListeners() {

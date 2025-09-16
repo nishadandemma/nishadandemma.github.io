@@ -24,7 +24,13 @@ export default class WordleHelper {// extends Phaser.Scene {
 
     guess(word) {
         this.nope = this.word.split("");
+        this.matches = [];
         this.taken = [];
+        for (let i = 0; i < this.length; i++) {
+            if (word.includes(this.word[i])) {
+                this.matches.push(this.word[i]);
+            }
+        }
         for (let i = 0; i < this.length; i++) {
             let currentChar = word.charAt(i).toLowerCase();
             if (this.isSameCharacter(currentChar, i)) {
@@ -39,12 +45,13 @@ export default class WordleHelper {// extends Phaser.Scene {
 
         for (let i = 0; i < this.length; i++) {
             let currentChar = word.charAt(i).toLowerCase();
-            if (this.isSomeWhereElse(currentChar))
+            if (this.isSomeWhereElse(currentChar) && this.matches.includes(currentChar)) {
                 this.status[this.current][i] = {letter: currentChar, color: 0xffa500 };
+                this.matches.splice(this.matches.indexOf(currentChar), 1);
+            }
             else if (!this.taken.includes(i))
                 this.status[this.current][i] = {letter: currentChar, color: 0xcccccc };
         }
-
         this.setOutcome()
     }
 
@@ -58,6 +65,13 @@ export default class WordleHelper {// extends Phaser.Scene {
             this.outcome = "win";
         else if (this.current+1 === this.attempts)
             this.outcome = "lose"
+    }
+
+    wrong () {
+       for (let i = 0; i < this.length; i++) {
+            this.status[this.current][i].setTween();
+
+       } 
     }
 
     removeFromNope(char) {

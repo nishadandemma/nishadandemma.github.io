@@ -7,15 +7,17 @@ export default class Tile extends Phaser.GameObjects.Container {
         this.letter = letter;
         this.scene = scene;
         this.scene.add.existing(this);
-        this.tile = new Phaser.GameObjects.Arc(this.scene, 64, 32, 30, 0, 360, false, 0xa5ed1f).setOrigin(0.5)
+        this.tile = new Phaser.GameObjects.Arc(this.scene, 0, 0, 45, 0, 360, false, 0xf5ecdc).setOrigin(0.5);
         this.add(this.tile);
+        this.hint = new Phaser.GameObjects.Sprite(this.scene, 0, 0, "hint").setOrigin(0.5).setAlpha(0.0);
+        this.add(this.hint);
         //this.tile = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
         //this.add(this.tile);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", letter, 20).setTint(0x000000).setOrigin(0.5)
+        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", letter, 50).setTint(0x000000).setOrigin(0.5,0.65)
         this.add(this.wordText);
         this.setListeners();
-
+        this.hintStatus = "OFF"
     }
 
     setListeners () {
@@ -23,8 +25,10 @@ export default class Tile extends Phaser.GameObjects.Container {
         this.tile.on('pointerdown', () => {
             if (!this.scene.enabled) return;
             //else {
-            this.tile.setFillStyle(0xe05ccf);
+            if (this.tile.fillColor === 0xf0e878 || this.tile.fillColor === 0xd48781 ) return;
+            this.tile.setFillStyle(0x85bc92);
             this.scene.addGuess(this);
+            this.scene.lastTile = this;
             //this.scene.playAudio("key");
             /*if (this.selected === 0 && this.scene.selectedBoxes < 4) {
                 this.scene.clickedWord(this);
@@ -46,18 +50,19 @@ export default class Tile extends Phaser.GameObjects.Container {
 
         this.tile.on('pointerover', () => {
             let g = this.scene.getGuess()
-            let l = this.scene.lastTile;
+            let l = this.scene.lastTile; 
             if (!this.scene.enabled) return;
+            if (this.tile.fillColor === 0xebb24d || this.tile.fillColor === 0xd18d88) return;
             if(g.length !== 0) {
                 if(g.includes(this)) {
-                    l.setColor(0xa5ed1f)
+                    if(l !== null) { l.setColor(0xf5ecdc); }
                     this.scene.removeGuess()
                     this.scene.lastTile = this;
                 }
                 else {
-                this.tile.setFillStyle(0xe05ccf);
-                this.scene.addGuess(this);
-                this.scene.lastTile = this;
+                    this.tile.setFillStyle(0x85bc92);
+                    this.scene.addGuess(this);
+                    this.scene.lastTile = this;
                 }
             }
             else {return}
@@ -79,5 +84,15 @@ export default class Tile extends Phaser.GameObjects.Container {
 
     setColor(color) {
         this.tile.setFillStyle(color)
+    }
+
+    showHint() {
+        this.hint.setAlpha(1.0);
+        this.hintStatus = "ON"
+    }
+
+    endHint() {
+        this.hint.setAlpha(0.0);
+        this.hintStatus = "OFF"
     }
 }

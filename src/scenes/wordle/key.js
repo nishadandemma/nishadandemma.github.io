@@ -11,7 +11,7 @@ export default class Key extends Phaser.GameObjects.Container {
 
         this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "keycup2").setOrigin(0.5);
         this.add(this.keycup);
-        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 60).setOrigin(.65)
+        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 60).setOrigin(.525,.8)
         this.add(this.letterText);
 
         this.setListeners();
@@ -19,6 +19,11 @@ export default class Key extends Phaser.GameObjects.Container {
 
     setColor (color) {
         this.square.setFillStyle(color);
+    }
+
+    setTextSize (size) {
+        this.letterText.setFontSize(size);
+        this.keycup.setDisplaySize(125, 142);
     }
 
     setListeners () {
@@ -39,14 +44,12 @@ export default class Key extends Phaser.GameObjects.Container {
             this.depthBackup = this.depth; 
             //this.scene.playAudio("over");
             this.depth = 10;
-            this.scene.setHelpText(this.letter)
             //this.setScale(1.2)
         })
 
         this.keycup.on('pointerout', () => {
             this.square.setFillStyle(this.backupColor);
             this.depth = 0;
-            this.scene.setHelpText("")
             //this.setScale(1)
         });
     }

@@ -19,6 +19,11 @@ export class Start extends Phaser.Scene
             "assets/fonts/lemonmilk.xml"
         );
         this.load.bitmapFont(
+            "lemonbold",
+            "assets/fonts/lemonbold.png",
+            "assets/fonts/lemonbold.xml"
+        );
+        this.load.bitmapFont(
             "nougat",
             "assets/fonts/nougattest.png",
             "assets/fonts/nougattest.xml"
@@ -30,9 +35,12 @@ export class Start extends Phaser.Scene
         this.load.image("blue", "assets/blue.png");
         this.load.image("block0", "assets/block0.png");
         this.load.image("letter", "assets/letter.png");
-        this.load.image("dot", "assets/red_dot.png");
+        this.load.image("star", "assets/star.png");
+        this.load.image("ellipse", "assets/ellipse.png");
+        this.load.image("hint", "assets/strandshint.png");
+        this.load.image("theme", "assets/theme.png");
         this.load.spritesheet("keycup", "assets/keycup.png", { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet("keycup2", "assets/keycup2.png", { frameWidth: 86, frameHeight: 86 });
+        this.load.spritesheet("keycup2", "assets/keycup2.png", { frameWidth: 86, frameHeight: 142 });
     //    this.load.image('connections', 'assets/blue.png');
     //    this.load.image('minicrossword', 'assets/blue.png');
     //    this.load.image('strands', 'assets/blue.png');

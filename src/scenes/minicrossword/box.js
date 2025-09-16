@@ -1,25 +1,52 @@
 export default class Box extends Phaser.GameObjects.Container {
-    constructor (scene, x, y, letter) {
+    constructor (scene, x, y, letter, num, row, col) {
         //super('Step'); 
         super(scene, x, y);
         this.x = x;
         this.y = y;
+        this.row = row;
+        this.col = col;
         this.letter = letter;
         this.scene = scene;
         this.scene.add.existing(this);
         this.baseColor = (this.letter === '0') ? 0x000000 : 0xffffff
-        this.square = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 60, 60, this.baseColor).setOrigin(0.5)
+        this.square = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 120, 120, this.baseColor).setOrigin(0.5)
         this.add(this.square);
+        this.num = new Phaser.GameObjects.BitmapText(this.scene, -50, -50, "lemonmilk", num, 20).setTint(0x000000).setOrigin(0.5)
+        this.add(this.num);
+        this.display = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", "" , 100).setTint(0x000000).setOrigin(0.5, 0.65)
+        this.add(this.display);
         //this.tile = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
         //this.add(this.tile);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
         //this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "mario", letter, 20).setTint(0x000000).setOrigin(0.5)
         //this.add(this.wordText);
-        //this.setListeners();
+        this.setListeners();
 
     }
-    
+
+    setListeners () {
+        this.square.setInteractive();
+        this.square.on('pointerdown', () => {
+            if (!this.scene.enabled) return;
+            else {
+                this.scene.clickedBox(this);
+            }
+        }); 
+    }
+
     setColor (color) {
         this.square.setFillStyle(color);
     }
+
+    setLetter (letter) {
+        this.display.setText(letter);
+    }
+
+    isPlayable () {
+        if (this.letter !== "0") {
+            return true
+        } else { return false }
+    }
+
 }

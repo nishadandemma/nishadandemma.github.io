@@ -11,7 +11,7 @@ export default class Key extends Phaser.GameObjects.Container {
 
         this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "keycup2").setOrigin(0.5);
         this.add(this.keycup);
-        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 60).setOrigin(0.65)
+        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 60).setOrigin(.525,.8)
         this.add(this.letterText);
 
         this.setListeners();
@@ -21,33 +21,40 @@ export default class Key extends Phaser.GameObjects.Container {
         this.square.setFillStyle(color);
     }
 
+    setTextSize (size) {
+        this.letterText.setFontSize(size);
+        this.keycup.setDisplaySize(125, 142);
+    }
+    
     setListeners () {
         this.keycup.setInteractive();
         this.keycup.on('pointerdown', () => {
             if (!this.scene.enabled) return;
             //this.scene.playAudio("key");
             this.scene.clickedLetter(this.letter)
-            this.square.setFillStyle(0x00ff00);
+            //this.square.setFillStyle(0x00ff00);
            // if (/^[a-z]{1}$/.test(this.letter) )
              //   this.scene.penguin.moveIt();
         }); 
-
+/*
         this.keycup.on('pointerover', () => {
             if (!this.scene.enabled) return;
             this.backupColor = this.square.fillColor;
-            this.square.setFillStyle(0x00eeee);
-            this.depthBackup = this.depth; 
+            //this.square.setFillStyle(0x00eeee);
+            //this.depthBackup = this.depth; 
             //this.scene.playAudio("over");
-            this.depth = 10;
+            //this.depth = 10;
             //this.scene.setHelpText(this.letter)
             //this.setScale(1.2)
         })
 
         this.keycup.on('pointerout', () => {
             this.square.setFillStyle(this.backupColor);
-            this.depth = 0;
+            //this.depth = 0;
             //this.scene.setHelpText("")
             //this.setScale(1)
         });
+
+*/        
     }
 }

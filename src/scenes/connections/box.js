@@ -10,13 +10,13 @@ export default class Box extends Phaser.GameObjects.Container {
         //this.selectedBoxes = this.scene.selectedBoxes;
         this.word = word// === "ñ" ? "n" : letter;
         this.scene.add.existing(this);
-        this.square = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 48, 48, 0xa5ed1f).setOrigin(0.5)
+        this.square = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 175, 175, 0xf5ecdc).setOrigin(0.5)
         this.add(this.square);
         this.selected = 0;
-        this.box = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
-        this.add(this.box);
+        //this.box = new Phaser.GameObjects.Sprite(this.scene, 0, 0, "letter").setOrigin(0.5);
+        //this.add(this.box);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.word, 10).setTint(0x000000).setOrigin(0.5)
+        this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", this.word, 30).setTint(0x000000).setOrigin(0.5)
         this.add(this.wordText);
         this.setListeners();
 
@@ -34,29 +34,34 @@ export default class Box extends Phaser.GameObjects.Container {
         this.selected = status;
     } 
 
+    setAlphas() {
+        this.square.setAlpha(0.0);
+        this.wordText.setAlpha(0.0);
+    }
+
     setListeners () {
-        this.box.setInteractive();
-        this.box.on('pointerdown', () => {
+        this.square.setInteractive();
+        this.square.on('pointerdown', () => {
             if (!this.scene.enabled) return;
             //this.scene.playAudio("key");
             if (this.selected === 0 && this.scene.selectedBoxes < 4) {
                 this.scene.clickedWord(this);
-                this.square.setFillStyle(0xed0e28);
+                this.square.setFillStyle(0xd48781);
                 this.selected = 1;
             } else if (this.selected === 1) {
                 this.scene.clickedWord(this);
-                this.square.setFillStyle(0xa5ed1f);
+                this.square.setFillStyle(0xf5ecdc);
                 this.selected = 0;
             } else return;
            // if (/^[a-z]{1}$/.test(this.letter) )
              //   this.scene.penguin.moveIt();
         });
 
-        this.box.on('pointerover', () => {
+        this.square.on('pointerover', () => {
             if (!this.scene.enabled || this.selected === 1 || this.scene.selectedBoxes === 4) return;
             else {
                 this.backupColor = this.square.fillColor;
-                this.square.setFillStyle(0xc93a4b);
+                this.square.setFillStyle(0x85bc92);
                 this.depthBackup = this.depth; 
                 //this.scene.playAudio("over");
                 this.depth = 10;
@@ -65,16 +70,16 @@ export default class Box extends Phaser.GameObjects.Container {
             //this.setScale(1.2)
         })
 
-        this.box.on('pointerout', () => {
+        this.square.on('pointerout', () => {
             if (this.selected === 1){
                 this.square.setFillStyle(this.backupColor);
                 this.depth = 0;
-                this.square.setFillStyle(0xed0e28);
+                this.square.setFillStyle(0xd48781);
             }
             else if (this.selected === 0) {
                 this.square.setFillStyle(this.backupColor);
                 this.depth = 0;
-                this.square.setFillStyle(0xa5ed1f);
+                this.square.setFillStyle(0xf5ecdc);
             }
             //this.scene.setHelpText("")
             //this.setScale(1)

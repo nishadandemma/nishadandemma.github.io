@@ -1,7 +1,21 @@
-import { BOARD } from "./minicrossword/board.js";
+import { BOARD_SAT } from "./minicrossword/board.js";
+import { NUM_SAT } from "./minicrossword/board.js";
+import { ACROSS_SAT } from "./minicrossword/board.js";
+import { DOWN_SAT } from "./minicrossword/board.js";
+import { BOARD_SUN } from "./minicrossword/board.js";
+import { NUM_SUN } from "./minicrossword/board.js";
+import { ACROSS_SUN } from "./minicrossword/board.js";
+import { DOWN_SUN } from "./minicrossword/board.js";
 import Box from "./minicrossword/box.js";
 import Key from "./minicrossword/keys.js";
 //import MiniHelper from "./minicrossword/minicrosswordsHelper.js";
+
+const BOARD = [];
+const NUM = [];
+const ACROSS = [];
+const DOWN = [];
+
+const clues = {};
 
 export class MiniCrossword extends Phaser.Scene {
     constructor() {
@@ -11,7 +25,7 @@ export class MiniCrossword extends Phaser.Scene {
     init(data) {
         this.name = data.name;
         this.number = data.number;
-    }
+    } 
 
     preload() {
         this.load.image('background', 'assets/background9x16.png');
@@ -26,10 +40,136 @@ export class MiniCrossword extends Phaser.Scene {
         this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
         this.addMenuButton();
         this.addTitle();
+        this.loadBoards();
+        this.addClues();
         this.createBoard();
-        this.guess = [];
+        this.getPopUp();
+        this.guessLine = "";
+        this.numOfBoxes = 23;
         this.addKeyboard();
+        this.rowMax = this.guess.length;
+        this.colMax = this.guess[0].length;
+        this.selectedColor = 0xfae05a;
+        this.restColor = 0xa1c9b8;
+        this.regColor = 0xffffff;
+        this.setUp("Across");
+        this.word = 1;
+        this.acrossClues = 5;
+        this.downClues = 5;
+        this.addResult();
     }
+
+    getPopUp () {
+      this.under = this.add.rectangle(this.center_width, 700, 450, 200, 0x97ba97, 0.0).setOrigin(0.5)//.setDepth(100);
+      this.popUp1 = this.add.bitmapText(this.center_width, 650, "lemonbold", "Almost!", 40).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
+      this.popUp2 = this.add.bitmapText(this.center_width, 700, "lemonmilk", "At least one square is off...", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
+      this.button = this.add.sprite(this.center_width, 760, "ellipse").setOrigin(0.5).setDisplaySize(150, 50).setAlpha(0.0);
+      this.tryAgain = this.add.bitmapText(this.center_width, 756, "lemonbold", "Try again", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)
+      this.button.setInteractive();
+      this.menuButton.on("pointerdown", () => {
+          //this.sound.add("move").play(); //maybe add sound effects when clicked?
+          this.setPopUp(0.0);
+      });
+    }
+
+    loadBoards () {
+      const today = new Date();
+      const day = today.getDate();
+      if (day % 2 == 0) {
+        BOARD = BOARD_SAT;
+        NUM = NUM_SAT;
+        ACROSS = ACROSS_SAT;
+        DOWN = DOWN_SAT;
+        clues = {
+        "1 Across": "SACK",
+        "5 Across": "SUSHI",
+        "6 Across": "TAPAS",
+        "7 Across": "OVERS",
+        "8 Across": "PENT",
+        "1 Down": "SUAVE",
+        "2 Down": "ASPEN",
+        "3 Down": "CHART",
+        "4 Down": "KISS",
+        "5 Down": "STOP"
+        };
+        this.guess = [["0","","","",""],
+                      ["","","","",""],
+                      ["","","","",""],
+                      ["","","","",""],
+                      ["","","","","0"]];
+      }
+      else if (day % 2 !== 0) {
+        BOARD = BOARD_SUN;
+        NUM = NUM_SUN;
+        ACROSS = ACROSS_SUN;
+        DOWN = DOWN_SUN;
+        clues = {
+        "1 Across": "SACK",
+        "5 Across": "SUSHI",
+        "6 Across": "TAPAS",
+        "7 Across": "OVERS",
+        "8 Across": "PENT",
+        "1 Down": "SUAVE",
+        "2 Down": "ASPEN",
+        "3 Down": "CHART",
+        "4 Down": "KISS",
+        "5 Down": "STOP"
+        };
+        this.guess = [["0","","","",""],
+                      ["","","","",""],
+                      ["","","","",""],
+                      ["","","","",""],
+                      ["","","","","0"]];
+      }
+    }
+
+    setPopUp (alpha) {
+      this.under.setAlpha(alpha);
+      this.popUp1.setAlpha(alpha);
+      this.popUp2.setAlpha(alpha);
+      this.button.setAlpha(alpha);
+      this.tryAgain.setAlpha(alpha);
+    }
+
+    getFirstRowInColumn (col) {
+      for (let i = 0; i < BOARD.length; i++) {
+        const row = BOARD[i];
+        if (row[col] !== "0") {
+          return i; // Return the row index of the first non-zero value
+        }
+      }
+    }
+
+    setNewSpace () {
+      //let start = 0;
+      if (this.direction === "Across") {
+        if (this.column === this.colMax - 1 || this.squares[this.row][this.column + 1].letter === "0") {
+            if (this.lastWord()) {this.setUp("Down")}
+            else {this.newWord();}
+        } else {
+          this.column += 1;
+          for (let i = 0; i < BOARD[this.row].length; i++) {
+            if(this.squares[this.row][i].isPlayable()) {
+              this.squares[this.row][i].setColor(this.restColor);
+            }
+          }
+        }  
+      } else if (this.direction === "Down") {
+          if (this.row === this.rowMax - 1 || this.squares[this.row + 1][this.column].letter === "0") {
+              if (this.lastWord()) {this.setUp("Across")}
+              else {this.newWord();}
+          } else {
+            this.row += 1;
+            for (let i = 0; i < BOARD.length; i++) {
+              if(this.squares[i][this.column].isPlayable()) {
+                this.squares[i][this.column].setColor(this.restColor);
+              }
+            }
+          }
+      }
+      this.squares[this.row][this.column].setColor(this.selectedColor)
+    }
+  
 
     addMenuButton() {
         this.menuButton = this.add
@@ -54,31 +194,32 @@ export class MiniCrossword extends Phaser.Scene {
     addTitle() {
       this.add.bitmapText(this.center_width, 100, "nougat", "MINICROSSWORD", 100).setOrigin(0.5);//.setDropShadow(3, 4, 0x222222, 0.7);
     }
-
+ 
     createBoard() {
       this.squares = [];
       //let boxY = 0;
       //let boxX = 56;
-      let x = this.center_width - (60*3.5);
-      let y = 150;
+      let x = this.center_width - (120*2.16);
+      let y = 300;
       //this.backboard = new Phaser.GameObjects.Rectangle(this, 35, 145, 350, 350, 0x000000).setOrigin(0.5);
       //this.add(this.backboard);
-      this.add.rectangle(this.center_width, 300, 370, 370, 0x000000).setOrigin(0.5);
+      this.add.rectangle(this.center_width, 560, 660, 660, 0x000000);
       for (let i = 0; i < BOARD.length; i++) {
         this.squares.push([]);
         for (let j = 0; j < BOARD[0].length; j++) {
             let letter = BOARD[i][j];
-            const box = new Box(this, x, y, letter);
+            let num = NUM[i][j];
+            const box = new Box(this, x, y, letter, num, i, j);
             this.squares[i].push(box);
-            x+=60+10
+            x+=120+10
         }
-        x = this.center_width - (60*3.5)
-        y += 60+10
+        x = this.center_width - (120*2.16)
+        y += 120+10
       }
     }
 
     addKeyboard () {
-      const alphabet = "qwertyuiop-asdfghjkl-zxcvbnm";
+      const alphabet = "QWERTYUIOP-ASDFGHJKL-ZXCVBNM";
       this.keyboard = {};
       let stepY = 0;
       let stepX = 0;// -32;
@@ -100,9 +241,9 @@ export class MiniCrossword extends Phaser.Scene {
             x = stepX + 129;
             break;
         }
-        stepY += isDash ? 86 : 0//48 : 0 
+        stepY += isDash ? 142 : 0//48 : 0 
         stepX = isDash ? 0 : stepX + 86//48;
-        y = 640 + stepY;
+        y = 1150 + stepY;
 
         if (isDash) {
           level = level + 1;
@@ -111,9 +252,307 @@ export class MiniCrossword extends Phaser.Scene {
         const key = new Key(this, x, y, letter)
         this.keyboard[letter] = key;
       })
-
+      this.keyboard["<<<"] = new Key(this, x + 107, y, "<<<");
+      this.keyboard["<<<"].setTextSize(30);
       //this.helpText = this.add.bitmapText(this.center_width, 630, "mario", "", 30).setTint(0x4d4d4d).setOrigin(0.5)
     }
 
+    clickedBox(box) {
+      //let 
+      if (this.row === box.row && this.column === box.col) {
+        if (this.direction === "Across") {
+          this.direction = "Down";
+          //reset the row
+          for (let i = 0; i < BOARD[0].length; i++) {
+            if(this.squares[this.row][i].isPlayable() && (i !== this.column)) {
+              this.squares[this.row][i].setColor(this.regColor);
+            }
+          }
+          //set up the column      
+          for (let i = 0; i < BOARD.length; i++) {
+            if(this.squares[i][this.column].isPlayable() && (i !== this.row)) {
+              this.squares[i][this.column].setColor(this.restColor);
+            }
+          }
+        } else if (this.direction === "Down") {
+          this.direction = "Across";
+          //reset the row
+          for (let i = 0; i < BOARD.length; i++) {
+            if(this.squares[i][this.column].isPlayable() && (i !== this.row)) {
+              this.squares[i][this.column].setColor(this.regColor);
+            }
+          }
+          //set up the column      
+          for (let i = 0; i < BOARD[0].length; i++) {
+            if(this.squares[this.row][i].isPlayable() && (i !== this.column)) {
+              this.squares[this.row][i].setColor(this.restColor);
+            }
+          }        
+        }
+      // } else if ((this.direction === "Across" && box.row === this.row) 
+      //             || (this.direction === "Down" && box.col === this.column)) {
+      //   this.row
+      } else {
+        this.row = box.row;
+        this.column = box.col;
+
+      //set up the colors
+
+        if (this.direction === "Across") {
+          for (let i = 0; i < BOARD.length; i++) {
+            for (let j = 0; j < BOARD[0].length; j++) {
+              if (this.squares[i][j].isPlayable()) {
+                if (i === this.row && j === this.column) {
+                  this.squares[i][j].setColor(this.selectedColor);
+                } else if (i === this.row) {
+                  this.squares[i][j].setColor(this.restColor);
+                } else {this.squares[i][j].setColor(this.regColor);}
+              }
+            }
+          }
+          //this.squares[this.row][this.column].setColor(this.selectedColor)
+        } else if (this.direction === "Down"){
+          for (let i = 0; i < BOARD.length; i++) {
+            for (let j = 0; j < BOARD[0].length; j++) {
+              if (this.squares[i][j].isPlayable()) {
+                if (i === this.row && j === this.column) {
+                  this.squares[i][j].setColor(this.selectedColor);
+                } else if (j === this.column) {
+                  this.squares[i][j].setColor(this.restColor);
+                } else {this.squares[i][j].setColor(this.regColor);}
+              }
+            }
+          }        
+        }
+      }
+      if (this.direction === "Across") {
+        let col = BOARD[this.row].indexOf(BOARD[this.row].find(element => element !== "0"));
+        this.word = ACROSS[this.row][col];
+      } else if (this.direction === "Down") {
+        let row = this.getFirstRowInColumn(this.column);
+        this.word = DOWN[row][this.column];
+      }
+      this.showClue();
+    }
+
+    clickedLetter(letter) {
+      const allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      if (allowed.indexOf(letter) >= 0 && this.enabled) {
+        this.guess[this.row][this.column] = letter;
+        this.guessLine += letter;
+        this.squares[this.row][this.column].setLetter(letter);
+        if (this.guessLine.length === this.numOfBoxes) {
+          this.gameEnd();
+        } else {
+          this.setNewSpace();
+        }
+      } else if (letter === "<<<") {
+        this.deleteOne();
+      }
+    }
+
+
+  setUp(direction) {
+    console.log("setup");
+    this.word = 1;
+    this.direction = direction;
+    if (this.direction === "Across") {
+      this.row = 0;
+      this.column = BOARD[0].indexOf(BOARD[0].find(element => element !== "0"));
+      for (let i = 0; i < BOARD.length; i++) {
+        for (let j = 0; j < BOARD[0].length; j++) {
+          if (this.squares[i][j].isPlayable()) {
+            if (i === this.row && j === this.column) {
+              this.squares[i][j].setColor(this.selectedColor);
+            } else if (i === this.row) {
+              this.squares[i][j].setColor(this.restColor);
+            } else {this.squares[i][j].setColor(this.regColor);}
+          }
+        }
+      }
+      //this.squares[this.row][this.column].setColor(this.selectedColor)
+    } else if (this.direction === "Down"){
+      this.row = 0;
+      this.column = BOARD[0].indexOf(BOARD[0].find(element => element !== "0"));
+      for (let i = 0; i < BOARD.length; i++) {
+        for (let j = 0; j < BOARD[0].length; j++) {
+          if (this.squares[i][j].isPlayable()) {
+            if (i === this.row && j === this.column) {
+              this.squares[i][j].setColor(this.selectedColor);
+            } else if (j === this.column) {
+              this.squares[i][j].setColor(this.restColor);
+            } else {
+              this.squares[i][j].setColor(this.regColor);
+            }
+          } 
+        }
+      }        
+    }
+    this.showClue();
+  }   
+
+  newWord () {
+    console.log("newword");
+    //needs to know what word I'm on and what direction and then jump to start of new word
+    let found = false;
+    let board = this.direction === "Across" ? ACROSS : DOWN;
+    for (let i = 0; i < BOARD.length; i++) {
+      for (let j = 0; j < BOARD[0].length; j++) {
+        if(this.squares[i][j].isPlayable()) {
+          if (board[i][j] === this.word+1) {
+            found = true;
+            this.row = i;
+            this.column = j;
+            this.squares[i][j].setColor(this.selectedColor);
+          } else if (found && ((this.direction === "Across" && i === this.row) ||(this.direction === "Down" && j === this.column))) {
+            this.squares[i][j].setColor(this.restColor);
+          } else {
+            this.squares[i][j].setColor(this.regColor);
+          }
+        }
+      }
+    }
+    this.word += 1;
+    this.showClue();
+  } 
+
+
+  lastWord() {
+    if ((this.direction === "Across" && this.word === 5) || (this.direction === "Down" && this.word === 5)) {
+      return true;
+    } else {return false;}
+  }
+
+  firstWord () {
+    if  (this.word === 1) {
+      return true;
+    } else {return false;}    
+  }
+
+  addResult () {
+    this.resultText = this.add.bitmapText(this.center_width, 580, "lemonmilk", "", 40).setTint(0x000000).setOrigin(0.5)
+  }
+
+  gameEnd () {
+    if (this.guess === BOARD) {
+      this.resultText.setText("WIN").setAlpha(1).setTint(0xffffff).setScale(2).setDropShadow(3, 4, 0x222222, 0.7);
+      this.tweens.add({
+        targets: this.resultText,
+        scale: { from : 2, to: 3},
+        repeat: -1,
+        duration: 500,
+        yoyo: true
+      })
+    } else {
+      this.setPopUp(1.0);
+    }
+  }
+
+  addClues () {
+    this.add.rectangle(this.center_width, 1000, 700, 175, 0xf5ecdc);
+    this.clueText = this.add.bitmapText(this.center_width, 995, "lemonmilk", "", 40).setTint(0x000000).setOrigin(0.5)
+  }
+
+  showClue () {
+    let num = 0;
+    if (this.direction === "Across") {
+      let ind = ACROSS[this.row].findIndex(value => value !== 0);
+      num = NUM[this.row][ind];
+    } else if (this.direction === "Down") {
+      let ind = 0;
+      for (let i = 0; i < BOARD.length; i++) {
+        if (DOWN[i][this.column] != 0) {ind = i}
+      }
+      num = NUM[ind][this.column];
+    }
+    let clueNum = num + " " + this.direction
+    let clueHint = clueNum + ": " + clues[clueNum]
+    this.clueText.setText(clueHint);
+  }
+
+  deleteOne () {
+    let newCol = 0;
+    let newRow = 0;
+    //let board = this.direction === "Across" ? ACROSS : DOWN;
+    if (this.direction === "Across") {
+      if (this.column === 0 || this.squares[this.row][this.column - 1].letter === "0") {
+        if (this.firstWord()) {
+          //then it's first box and we want to delete last box
+          for (let i=0; i < BOARD.length; i ++) {
+            for (let j=0; j < BOARD[0].length; j++) {
+              if (DOWN[i][j] === this.downClues) {
+                newRow = i;
+                newCol = j;
+              }
+            }
+          }
+          for (let k=newRow; k < BOARD.length; k++) {
+            if (this.squares[k][newCol].isPlayable()) {
+              newRow = k;
+            }
+          }
+          this.direction = "Down"
+        } else {
+          //then its beginning of word and we need to go back a word
+          newRow = this.row - 1;
+          for (let i = 0; i < BOARD[0].length; i++) {
+            if (BOARD[newRow][i] !== "0") {
+              newCol = i;
+            }
+          }      
+        }
+        this.squares[newRow][newCol].setLetter("");
+        this.guess[newRow][newCol] = "";
+        this.guessLine = this.guessLine.slice(0,-1);
+        this.clickedBox(this.squares[newRow][newCol]); 
+      } else { //middle of word
+        newCol = this.column - 1;
+        this.squares[this.row][newCol].setLetter("");
+        this.guess[this.row][newCol] = "";
+        this.guessLine = this.guessLine.slice(0,-1);
+        this.clickedBox(this.squares[this.row][newCol]);
+      }
+    } 
+    else if (this.direction === "Down") {
+      if (this.row === 0 || this.squares[this.row-1][this.column].letter === "0") {
+        if (this.firstWord()) {
+          //then it's first box and we want to delete last box
+          for (let i=0; i < BOARD.length; i++) {
+            for (let j=0; j < BOARD[0].length; j++) {
+              if (ACROSS[i][j] === this.acrossClues) {
+                newRow = i;
+                newCol = j;
+              }
+            }
+          }
+          for (let k=newCol; k < BOARD[0].length; k++) {
+            if (this.squares[newRow][k].isPlayable()) {
+              newCol = k;
+            }
+          }
+          this.direction = "Across"
+        } else {
+          //then its beginning of word and we need to go back a word
+          newCol = this.column - 1;
+          for (let i = 0; i < BOARD.length; i++) {
+            if (BOARD[i][newCol] !== "0") {
+              newRow = i;
+            }
+          }
+        }
+        this.squares[newRow][newCol].setLetter("");
+        this.guess[newRow][newCol] = "";
+        this.guessLine = this.guessLine.slice(0,-1);
+        this.clickedBox(this.squares[newRow][newCol]);     
+      } else { //middle of word
+        newRow = this.row - 1;
+        this.squares[newRow][this.column].setLetter("");
+        this.guess[newRow][this.column] = "";
+        this.guessLine = this.guessLine.slice(0,-1);
+        this.clickedBox(this.squares[newRow][this.column]);
+      }
+    }
+  }
 
 }

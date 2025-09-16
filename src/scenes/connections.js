@@ -3,10 +3,10 @@ import Groups from "./connections/groups.js";
 import Chance from "./connections/chance.js";
 import ConnectionsHelper from "./connections/connectionsHelper.js";
 
-const group1 = ["apple", "banana", "pear", "cherry"];
-const group2 = ["elm", "oak", "maple", "pine"];
-const group3 = ["peru", "canada", "japan", "india"];
-const group4 = ["blue", "red", "pink", "yellow"];
+const group1 = [];
+const group2 = [];
+const group3 = [];
+const group4 = [];
 
 export class Connections extends Phaser.Scene {
     constructor() {
@@ -46,6 +46,9 @@ export class Connections extends Phaser.Scene {
       this.addBoard();
       this.addChances();
       this.addButtons();
+      this.addResult();
+      this.addOnlyOneText();
+      this.previousGuesses = [];
       //mistakes remaining
       //shuffle --always allowed
       //deselect all -- only clickable with >= 1 selected, greyed out otherwise
@@ -53,14 +56,41 @@ export class Connections extends Phaser.Scene {
     }
 
     loadCategories() {
-      group1.category = "Fruits"
-      group2.category = "Trees"
-      group3.category = "Countries"
-      group4.category = "Colors"
-      group1.color = "0x2030e3"//blue
-      group2.color = "0x7120e3"//purple
-      group3.color = "0xf2eb27"//yellow
-      group4.color = "0x4df53d"//green
+      const today = new Date();
+      const day = today.getDate();
+      if (day % 2 == 0) {
+        group1 = ["apple", "banana", "pear", "cherry"];
+        group2 = ["elm", "oak", "maple", "pine"];
+        group3 = ["peru", "canada", "japan", "india"];
+        group4 = ["blue", "red", "pink", "yellow"];
+        group1.category = "Fruits"
+        group2.category = "Trees"
+        group3.category = "Countries"
+        group4.category = "Colors"
+        group1.detail = "Apple, Banana, Pear, Cherry"
+        group2.detail = "Elm, Oak, Maple, Pine"
+        group3.detail = "Peru, Canada, Japan, India"
+        group4.detail = "Blue, Red, Pink, Yellow"
+      }
+      else if (day % 2 !== 0) {
+        group1 = ["apple", "banana", "pear", "cherry"];
+        group2 = ["elm", "oak", "maple", "pine"];
+        group3 = ["peru", "canada", "japan", "india"];
+        group4 = ["blue", "red", "pink", "yellow"];
+        group1.category = "Fruits"
+        group2.category = "Trees"
+        group3.category = "Countries"
+        group4.category = "Colors"
+        group1.detail = "Apple, Banana, Pear, Cherry"
+        group2.detail = "Elm, Oak, Maple, Pine"
+        group3.detail = "Peru, Canada, Japan, India"
+        group4.detail = "Blue, Red, Pink, Yellow"
+      }
+      
+      group1.color = "0x709EAC"//blue
+      group2.color = "0xa084bd"//purple
+      group3.color = "0xe3dc94"//yellow
+      group4.color = "0x7db57d"//green
       this.allOptions = group1.concat(group2, group3, group4)
     }
 
@@ -85,24 +115,27 @@ export class Connections extends Phaser.Scene {
     }
 
     addButtons() {
+        this.submite = this.add.sprite(600, 1305, "ellipse").setOrigin(0.5).setDisplaySize(225, 75);
         this.submitButton = this.add
-            .bitmapText(334, 600, "lemonmilk", "Submit", 15)
+            .bitmapText(600, 1300, "lemonbold", "Submit", 36)
             .setOrigin(0.5)
             .setTint(0x050cf8 )
           //  .setDropShadow(2, 3, 0x693600, 0.7);
         this.submitButton.setInteractive();
         this.submitButton.on("pointerdown", () => {
-            this.guessGrouping();
+            if (this.guess.length === 4) {
+              this.guessGrouping();
+            } else return  
         });
 
+        this.deselcte = this.add.sprite(300, 1305, "ellipse").setOrigin(0.5).setDisplaySize(325, 75);
         this.deselectButton = this.add
-            .bitmapText(166, 600, "lemonmilk", "Deselect All", 15)
+            .bitmapText(300, 1300, "lemonbold", "Deselect All", 36)
             .setOrigin(0.5)
             .setTint(0x050cf8)
           //  .setDropShadow(2, 3, 0x693600, 0.7);
         this.deselectButton.setInteractive();
         this.deselectButton.on("pointerdown", () => {
-            console.log("Deselect all")
             this.deselectAll();
         });
 /*
@@ -123,13 +156,17 @@ export class Connections extends Phaser.Scene {
       this.add.bitmapText(this.center_width, 100, "nougat", "CONNECTIONS", 100).setOrigin(0.5);//.setDropShadow(3, 4, 0x222222, 0.7);
     }
 
+    addResult () {
+      this.resultText = this.add.bitmapText(this.center_width, 580, "lemonmilk", "", 40).setTint(0x000000).setOrigin(0.5)
+    }
+
     addBoard() {
       this.shuffledBoard = this.shuffleArray(this.allOptions);
       this.boxes = [];
       //let boxY = 0;
       //let boxX = 56;
-      let x = this.center_width - (64*2.5) - 15;
-      let y = 150;
+      let x = this.center_width - (175*1.5+15*1.5);
+      let y = 400;
       let ind = 0
       //this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
       Array(4).fill(0).forEach((box, i) => {
@@ -138,12 +175,12 @@ export class Connections extends Phaser.Scene {
           let word = this.shuffledBoard[ind]
           const box = new Box(this, x, y, word)
           this.boxes[i].push(box);
-          x += 64 + 10;
+          x += 190;
           ind += 1
         })
         //ind += 1
-        x = this.center_width - (64*2.5) - 15;
-        y += 64 + 10;
+        x = this.center_width - (175*1.5+15*1.5);
+        y += 190;
       })
     }
 
@@ -152,14 +189,14 @@ export class Connections extends Phaser.Scene {
     }
 
     clickedWord(box) {
-        //let word = box.word;
       if (this.guess.indexOf(box) === -1 && this.enabled) {
         this.guess.push(box);
         this.selectedBoxes += 1;
       } else if (this.guess.indexOf(box) >= 0 && this.enabled) {
         this.guess.splice(this.guess.indexOf(box), 1);
         this.selectedBoxes = this.selectedBoxes - 1;
-      }/* else if (letter === "-") {
+      } 
+      /* else if (letter === "-") {
         this.deleteOne();
       } else if (letter === "--") {
         this.deleteAll();
@@ -169,34 +206,48 @@ export class Connections extends Phaser.Scene {
     addChances () {
       this.chances = [];
       this.chancesLeft = 3; 
-      let x = this.center_width - (64*2.5) - 15;
-      let y = 450;    
+      let x = this.center_width - (84*1.55);
+      let y = 1150;    
       Array(4).fill(0).forEach((_, j) => {
           const chance = new Chance(this, x, y)
           this.chances.push(chance);
-          x += 64 + 10;
+          x += 64 + 20;
         })
 
     }
 
     guessGrouping() {
       console.log("guessing")
-      this.connections.guess(this.guess, this.boxes);
-      //this.resetBoxes();
-      //this.connections.next() //update misses or increase the board index for insert
-      let result = this.connections.currentResult();
-      let current = this.connections.currentGroupLine();
-      if (result === "right") {
-        this.guess = [];
-        this.updateBoard();
-        this.connections.clearUp();
-        let [category, color] = this.connections.returnWinnerGroup();
-        this.groups[current-1].revealGroup(category, color);
+      let words = [];
+      for (let i = 0; i < this.guess.length; i++) {
+            words.push(this.guess[i].word);
       }
-      else {
-        this.chances[this.chancesLeft].setOpacity();
-        this.chancesLeft-=1;
-      }       
+      if (this.previousGuesses.includes(words.sort())) {
+        this.showAlreadyGuessedText();
+        return;
+      } else {
+        this.previousGuesses.push(words.sort());
+        this.connections.guess(this.guess, this.boxes);
+        //this.resetBoxes();
+        //this.connections.next() //update misses or increase the board index for insert
+        let result = this.connections.currentResult();
+        let current = this.connections.currentGroupLine();
+        if (result === "right") {
+          this.guess = [];
+          this.updateBoard();
+          this.connections.clearUp();
+          let [category, color, detail] = this.connections.returnWinnerGroup();
+          this.groups[current-1].revealGroup(category, color, detail);
+          this.hideboxes(current-1);
+        }
+        else {
+          if (this.connections.isThree()) {this.showOnlyOneText();}
+          this.chances[this.chancesLeft].setOpacity();
+          this.chancesLeft-=1;
+        } 
+        this.connections.setOutcome(this.chancesLeft);  
+        this.checkEnd();
+      }
     }
 
     shuffleArray(array) {
@@ -209,7 +260,7 @@ export class Connections extends Phaser.Scene {
 
     deselectAll () {
       for (let j = 0; j < this.guess.length; j++) {
-        this.guess[j].setColor(0xa5ed1f);
+        this.guess[j].setColor(0xf5ecdc);
         this.guess[j].setStatus(0);
       }
       this.selectedBoxes = 0;      
@@ -223,8 +274,6 @@ export class Connections extends Phaser.Scene {
         const move2Group = this.connections.currentMove2Group();
         const move_Out = this.connections.currentMove_Out();
         for (let i = 0; i < move2Group.length; i++) {
-          console.log(move2Group[i].word + ": x-" + move2Group[i].x + ": y-" + move2Group[i].y)
-          console.log(move_Out[i].word + ": x-" + move_Out[i].x + ": y-" + move_Out[i].y)
           let wrongX = move_Out[i].x;
           let wrongY = move_Out[i].y;
           let corrX = move2Group[i].x;
@@ -263,14 +312,95 @@ export class Connections extends Phaser.Scene {
     }
 
     setUpGroups() {
-      let y = 150;
+      let y = 400;
       this.groups = [];
       for (let i = 0; i < 4; i++) {
-        const group = new Groups(this, this.center_width-26, y)
+        const group = new Groups(this, this.center_width, y)
         this.groups.push(group);      
-        y += 74
+        y += 190
       }
 
     }
 
+    hideboxes (index) {
+      for (let i = 0; i < 4; i++) {
+          this.boxes[index][i].setAlphas();
+      }
+    }
+
+    checkEnd () {
+      if (this.connections.outcome !== "playing") {
+        this.enabled = false;
+        this.time.delayedCall(1600 , () => { this.showResult(); }, null, this);
+      }
+    }
+
+    showResult () {
+      if (this.connections.outcome === "lose") {
+        this.showAnswer();
+        return;
+      } 
+
+      //this.penguin.play("playerjump", true)
+      //this.playAudio("victory")
+      this.resultText.setText(this.connections.outcome).setAlpha(1).setTint(0xffffff).setScale(2).setDropShadow(3, 4, 0x222222, 0.7);
+      this.tweens.add({
+        targets: this.resultText,
+        scale: { from : 2, to: 3},
+        repeat: -1,
+        duration: 500,
+        yoyo: true
+      })
+    }
+
+    showAnswer() {
+      this.deselectAll();
+      const done = this.connections.groupsTaken;
+      const left = [group1, group2, group3, group4];
+      for (let i = 0; i < 4; i++) {
+        if (left.includes(done[i])) {
+          left.splice(left.indexOf(done[i]), 1);
+        }      
+      }
+      if (left.length === 0 ) return
+      let working = left[0]
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          let word = this.boxes[i][j].word;
+          word = word.charAt(0).toUpperCase() + word.slice(1);
+          if (working.detail.includes(word)) {
+            //this.clickedWord(this.boxes[i][j]);
+            this.guess.push(this.boxes[i][j]);
+            this.boxes[i][j].setStatus(1);
+          }
+        }  
+      }
+      this.guessGrouping();
+    }
+
+    addOnlyOneText () {
+      this.onlyOne = this.add.bitmapText(this.center_width, 250, "nougat", "", 40).setOrigin(0.5).setAlpha(0.0);
+    }
+
+    showOnlyOneText () {
+      this.onlyOne.setText("One away...");
+      this.tweens.add({
+        targets: this.onlyOne,
+        duration: 800,
+        alpha: { from: 0.0, to: 1 },
+        repeat: 0,
+        yoyo: true
+      });
+    } 
+
+    showAlreadyGuessedText () {
+      this.onlyOne.setText("Already guessed...");
+      this.tweens.add({
+        targets: this.onlyOne,
+        duration: 800,
+        alpha: { from: 0.0, to: 1 },
+        repeat: 0,
+        yoyo: true
+      });
+    } 
 }

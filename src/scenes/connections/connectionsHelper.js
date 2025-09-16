@@ -15,6 +15,9 @@ export default class ConnectionsHelper {// extends Phaser.Scene {
         this.init();
         this.category = "";
         this.color = "";
+        this.detail = "";
+        this.groupsTaken = [];
+        this.g = [];
     }
 
     init () { 
@@ -28,21 +31,29 @@ export default class ConnectionsHelper {// extends Phaser.Scene {
     guess(grouping, realBoxes) {
         let currGrouping = grouping//.sort();//input will be box objects, will need to turn this reference to text only
         let boxes = realBoxes;
-        if (this.arraysAreEqual(currGrouping, this.group1)) {
+        if (this.arraysAreEqual(currGrouping, this.group1, 1)) {
             this.category = this.group1.category;
             this.color = this.group1.color;
+            this.detail = this.group1.detail;
+            this.groupsTaken.push(this.group1)
             this.result = "right";
-        } else if (this.arraysAreEqual(currGrouping, this.group2)) {
+        } else if (this.arraysAreEqual(currGrouping, this.group2, 2)) {
             this.category = this.group2.category;
             this.color = this.group2.color;
+            this.detail = this.group2.detail;
+            this.groupsTaken.push(this.group2)
             this.result = "right";
-        } else if (this.arraysAreEqual(currGrouping, this.group3)) {
+        } else if (this.arraysAreEqual(currGrouping, this.group3, 3)) {
             this.category = this.group3.category;
             this.color = this.group3.color;
+            this.detail = this.group3.detail;
+            this.groupsTaken.push(this.group3)
             this.result = "right";      
-        } else if (this.arraysAreEqual(currGrouping, this.group4)) {
+        } else if (this.arraysAreEqual(currGrouping, this.group4, 4)) {
             this.category = this.group4.category;
             this.color = this.group4.color;
+            this.detail = this.group4.detail;
+            this.groupsTaken.push(this.group4)
             this.result = "right";     
         } else {
             this.result = "wrong"
@@ -72,14 +83,18 @@ export default class ConnectionsHelper {// extends Phaser.Scene {
             }
         this.current += 1;
         }
+        //this.setOutcome();
     }
 
-    arraysAreEqual(arr1, arr2) {
+    arraysAreEqual(arr1, arr2, group) {
         const aValues = [];
 
         for (let i = 0; i < arr1.length; i++) {
             aValues.push(arr1[i].word);
-        }
+            if (arr2.includes(arr1[i].word) ) {
+                this.g[i] = group;
+            }
+        }        
         return JSON.stringify(aValues.sort()) === JSON.stringify(arr2);
     }
 
@@ -105,11 +120,36 @@ export default class ConnectionsHelper {// extends Phaser.Scene {
     }
 
     returnWinnerGroup() {
-        return [this.category, this.color]
+        return [this.category, this.color, this.detail]
     }
 
-    setOutcome() {
-
-
+    setOutcome (chancesLeft) {
+        if (this.outcome !== "playing") return
+        if (this.current === 4)
+            this.outcome = "win";
+        else if (chancesLeft < 0)
+            this.outcome = "lose"
     }
+
+    isThree () {
+        let g1 = this.g[0];
+        let g2 = null;
+        let g1count = 1;
+        let g2count = 0;
+        for (let i = 1; i < 4; i++) {
+            if (this.g[i] === g1) {g1count += 1}
+            else if (this.g[i] === g2) {g2count += 1}
+            else {
+                g2 = this.g[i];
+            }
+        }
+        // console.log(this.g)
+        // console.log(g1)
+        // console.log(g1count)
+        // console.log(g2)
+        // console.log(g2count)
+        if (g1count === 3 || g2count === 3) {return true}
+        else {return false}
+    }
+
 }

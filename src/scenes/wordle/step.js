@@ -7,13 +7,13 @@ export default class Step extends Phaser.GameObjects.Container {
         this.scene = scene;
         this.letter = letter// === "ñ" ? "n" : letter;
         this.scene.add.existing(this);
-        this.square = new Phaser.GameObjects.Rectangle(this.scene, 64, 32, 48, 48, 0xffffff).setOrigin(0.5)
+        this.square = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 140, 140, 0xffffff).setOrigin(0.5)
         this.add(this.square);
 
         //this.keycup = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
         //this.add(this.keycup);
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
-        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 64, 32, "lemonmilk", this.letter.toUpperCase(), 40).setTint(0x000000).setOrigin(0.5)
+        this.letterText = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", this.letter.toUpperCase(), 100).setTint(0x000000).setOrigin(0.5)
         this.add(this.letterText);
     }
 
@@ -23,5 +23,14 @@ export default class Step extends Phaser.GameObjects.Container {
 
     setColor (color) {
         this.square.setFillStyle(color);
+    }
+
+    setTween () {
+        this.scene.tweens.add({
+            targets: this,
+            x: { from: this.x-5, to: this.x },
+            duration: 100//,
+            //ease: 'Linear'
+        });
     }
 }

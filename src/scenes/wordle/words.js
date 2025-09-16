@@ -4270,7 +4270,6 @@ export const WORDS = [
     'hussy',
     'torts',
     'disco',
-    'whore',
     'boozy',
     'gibed',
     'vamps',

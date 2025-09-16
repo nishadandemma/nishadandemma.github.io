@@ -32,9 +32,9 @@ export class Wordle extends Phaser.Scene {
       //this.add.tileSprite(0, 0, 1800, 1800, "background").setOrigin(0.5);
       //this.cameras.main.setBackgroundColor(0xffffff);
       this.background = this.add.tileSprite(this.center_width, this.center_height, 900, 1600, 'background');
+
       this.addMenuButton();
       this.loadWord();
-      console.log(this.wordToGuess);
       this.wordle = new WordleHelper(this.wordToGuess)
       this.guess = "";
       this.enabled = true;
@@ -43,8 +43,10 @@ export class Wordle extends Phaser.Scene {
       this.addSteps();
       this.addLetters();
       this.addResult();
-
-    }
+      // this.popupunder = this.add.rectangle(this.center_width,175,350, 75, 0xf5ecdc, 0.0).setOrigin(0.5);
+      this.popup = this.add.bitmapText(this.center_width, 175, "lemonbold", "", 30).setAlpha(0.0).setOrigin(0.5);
+      this.previousGuesses = [];
+      }
 
     addMenuButton() {
         this.menuButton = this.add
@@ -71,7 +73,15 @@ export class Wordle extends Phaser.Scene {
     //  const today = `${new Date().getFullYear()}-${("0" + (new Date().getMonth()+1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`;
     //  console.log("Loading ", lang, today)
     //  this.wordToGuess = words[lang][today];
-    this.wordToGuess = WORDS[Math.floor(Math.random() * WORDS.length)]
+    //this.wordToGuess = WORDS[Math.floor(Math.random() * WORDS.length)]
+    const today = new Date();
+    const day = today.getDate();
+    if (day % 2 == 0) {
+      this.wordToGuess = "sange";
+    }
+    else if (day % 2 !== 0) {
+      this.wordToGuess = "weddi";
+    }
     }
 
     addTitle() {
@@ -80,20 +90,19 @@ export class Wordle extends Phaser.Scene {
 
 
     addSteps () {
-      const alphabet = "qwertyuiop-asdfghjkl-zxcvbnm";
       this.steps = [];
-      let x = 56;
-      let y = 200;
+      let x = this.center_width - (2.375*125);
+      let y = 260;
 
       Array(6).fill(0).forEach((letter, i) => {
         this.steps.push([])
         Array(5).fill(0).forEach((_, j) => {
           const step = new Step(this, x, y)
           this.steps[i].push(step);
-          x += 64;
+          x += 150;
         })
-        x = 56;
-        y += 64;
+        x = this.center_width - (2.375*125);
+        y += 150;
       })
     }
 
@@ -121,9 +130,9 @@ export class Wordle extends Phaser.Scene {
             x = stepX + 129;
             break;
         }
-        stepY += isDash ? 86 : 0//48 : 0 
+        stepY += isDash ? 142 : 0//48 : 0 
         stepX = isDash ? 0 : stepX + 86//48;
-        y = 1280 + stepY;
+        y = 1150 + stepY;
 
         if (isDash) {
           level = level + 1;
@@ -133,11 +142,12 @@ export class Wordle extends Phaser.Scene {
         this.keyboard[letter] = key;
       })
 
-      //this.keyboard["ok"] = new Key(this, x + 48, y, "ok");
-      //this.keyboard["-"] = new Key(this, x + 96, y, "-");
+      this.keyboard["enter"] = new Key(this, 25, y, "enter");
+      this.keyboard["enter"].setTextSize(30);
+      this.keyboard["<<<"] = new Key(this, x + 107, y, "<<<");
+      this.keyboard["<<<"].setTextSize(30);
       
       //this.keyboard["--"] = new Key(this, x + 144, y, "--");
-      this.helpText = this.add.bitmapText(this.center_width, 630, "lemonmilk", "", 30).setTint(0x4d4d4d).setOrigin(0.5)
     }
 
     addResult () {
@@ -169,8 +179,9 @@ export class Wordle extends Phaser.Scene {
     }
 
     showAnswer() {
+      this.answer = this.add.sprite(this.center_width, 540, "ellipse").setOrigin(0.5).setDisplaySize(825, 225).setTint(0x7db57d);
       Array(5).fill(0).forEach((_, i) => {
-        new Step(this, 56 + (64 * i), 540, this.wordle.word.charAt(i));
+        new Step(this, this.center_width - (2.375*125) + (150 * i), 540, this.wordle.word.charAt(i));
       })
       //this.playAudio("defeat")
       //this.penguin.y = 514;
@@ -179,11 +190,11 @@ export class Wordle extends Phaser.Scene {
   
   setHelpText (letter) {
     const help = {
-      "ok": "Enter",
-      "-": "Delete"//,
+      "enter": "Enter",
+      "<<<": "Delete"//,
      // "--": "Delete all"
     }[letter] || letter;
-    this.helpText.setText(help) 
+    //this.helpText.setText(help) 
   }
 
     clickedLetter (letter) {
@@ -192,21 +203,61 @@ export class Wordle extends Phaser.Scene {
       if (allowed.indexOf(letter) >= 0 && this.guess.length < 5 && this.enabled) {
         this.guess += letter;
         this.steps[this.wordle.current][this.guess.length - 1].setLetter(letter);
-      } else if (letter === "ok" && this.guess.length === 5) {
+      } else if (letter === "enter" && this.guess.length === 5) {
         this.guessLine();
-      } else if (letter === "-") {
+      } else if (letter === "<<<") {
         this.deleteOne();
-      }// else if (letter === "--") {
-       // this.deleteAll();
-      //}
+      }
     }
 
     guessLine() {
-      this.wordle.guess(this.guess);
-      this.updateSteps();
-      this.wordle.next()
-      this.guess = "";
-      this.checkEnd();
+      if (this.previousGuesses.includes(this.guess)) {
+        this.showAlreadyGuessed();
+      }
+      else {
+        this.previousGuesses.push(this.guess);
+        if (WORDS.includes(this.guess)) {
+          this.wordle.guess(this.guess);
+          this.updateSteps();
+          this.wordle.next()
+          this.guess = "";
+          this.checkEnd();
+        }
+        else {
+          this.popUp();
+          this.steps[this.wordle.current].forEach((step,i) => {
+          //this.time.delayedCall(400 * i, () => {
+            step.setTween();
+          //}, null, this);
+        });
+        }
+      }
+    }
+
+    popUp () {
+      // this.tweens.add({
+      //   targets: this.popupunder,
+      //   duration: 800,
+      //   alpha: { from: 0.0, to: 1 },
+      //   repeat: 0,
+      //   yoyo: true
+      // });      
+      this.popup.setText("Not in word list");
+      this.tweens.add({
+        targets: this.popup,
+        duration: 800,
+        alpha: { from: 0.0, to: 1 },
+        repeat: 0,
+        yoyo: true
+      });
+
+
+
+      // this.popup.setAlpha(1.0);
+      // this.popupunder.setAlpha(1.0);
+      // this.time.delayedCall(1000);
+      // this.popup.setAlpha(0.0);
+      // this.popupunder.setAlpha(0.0);
     }
 
     checkEnd () {
@@ -219,7 +270,7 @@ export class Wordle extends Phaser.Scene {
     updateSteps () {
       const status = this.wordle.currentStatus();
       this.steps[this.wordle.current].forEach((step,i) => {
-        this.time.delayedCall(400 * i, () => {
+        this.time.delayedCall(200 * i, () => {
           step.setColor(status[i].color);
           this.keyboard[status[i].letter].setColor(status[i].color);
           //this.playAudio(this.colorKeys[status[i].color]);
@@ -236,4 +287,23 @@ export class Wordle extends Phaser.Scene {
       this.guess = "";
       this.steps[this.wordle.current].forEach(text => {if (text) text.setLetter()});
     }
+
+    showAlreadyGuessed () {
+      // this.tweens.add({
+      //   targets: this.popupunder,
+      //   duration: 800,
+      //   alpha: { from: 0.0, to: 1 },
+      //   repeat: 0,
+      //   yoyo: true
+      // });   
+      this.popup.setText("Already guessed...")   
+      this.tweens.add({
+        targets: this.popup,
+        duration: 800,
+        alpha: { from: 0.0, to: 1 },
+        repeat: 0,
+        yoyo: true
+      });
+    }
+
 }
