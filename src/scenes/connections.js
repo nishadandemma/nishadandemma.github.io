@@ -3,10 +3,10 @@ import Groups from "./connections/groups.js";
 import Chance from "./connections/chance.js";
 import ConnectionsHelper from "./connections/connectionsHelper.js";
 
-const group1 = [];
-const group2 = [];
-const group3 = [];
-const group4 = [];
+let group1 = [];
+let group2 = [];
+let group3 = [];
+let group4 = [];
 
 export class Connections extends Phaser.Scene {
     constructor() {

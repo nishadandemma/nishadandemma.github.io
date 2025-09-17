@@ -10,12 +10,12 @@ import Box from "./minicrossword/box.js";
 import Key from "./minicrossword/keys.js";
 //import MiniHelper from "./minicrossword/minicrosswordsHelper.js";
 
-const BOARD = [];
-const NUM = [];
-const ACROSS = [];
-const DOWN = [];
+let BOARD = [];
+let NUM = [];
+let ACROSS = [];
+let DOWN = [];
 
-const clues = {};
+let clues = {};
 
 export class MiniCrossword extends Phaser.Scene {
     constructor() {

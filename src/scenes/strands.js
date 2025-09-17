@@ -6,10 +6,10 @@ import Tile from "./strands/tiles.js";
 import Connector from "./strands/connector.js";
 //import StrandsHelper from "./strands/strandsHelper.js";
 
-const LETTERS = [];
-const words = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
-const spanagram = "xxxxxxxx"
-const themeWord = "Letters..."
+let LETTERS = [];
+let words = [];
+let spanagram = ""
+let themeWord = ""
 
 
 export class Strands extends Phaser.Scene {
@@ -63,9 +63,15 @@ export class Strands extends Phaser.Scene {
         const day = today.getDate();
         if (day % 2 == 0) {
             LETTERS = LETTERS_SAT;
+            words = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
+            spanagram = "xxxxxxxx"
+            themeWord = "Letters..."
         }
         else if (day % 2 !== 0) {
             LETTERS = LETTERS_SUN;
+            words = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
+            spanagram = "xxxxxxxx"
+            themeWord = "Letters..."
         }
     }
 
