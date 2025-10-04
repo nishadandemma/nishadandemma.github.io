@@ -114,9 +114,9 @@ export class Connections extends Phaser.Scene {
     }
 
     addButtons() {
-        this.submite = this.add.sprite(600, 1305, "ellipse").setOrigin(0.5).setDisplaySize(225, 75);
+        this.submite = this.add.sprite(650, 1305, "ellipse").setOrigin(0.5).setDisplaySize(300, 150);
         this.submitButton = this.add
-            .bitmapText(600, 1300, "lemonbold", "Submit", 36)
+            .bitmapText(650, 1300, "lemonbold", "Submit", 36)
             .setOrigin(0.5)
             .setTint(0x050cf8 )
           //  .setDropShadow(2, 3, 0x693600, 0.7);
@@ -127,7 +127,7 @@ export class Connections extends Phaser.Scene {
             } else return  
         });
 
-        this.deselcte = this.add.sprite(300, 1305, "ellipse").setOrigin(0.5).setDisplaySize(325, 75);
+        this.deselcte = this.add.sprite(300, 1305, "ellipse").setOrigin(0.5).setDisplaySize(325, 150);
         this.deselectButton = this.add
             .bitmapText(300, 1300, "lemonbold", "Deselect All", 36)
             .setOrigin(0.5)

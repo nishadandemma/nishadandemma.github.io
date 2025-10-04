@@ -47,7 +47,7 @@ export class MiniCrossword extends Phaser.Scene {
         this.createBoard();
         this.getPopUp();
         this.guessLine = "";
-        this.numOfBoxes = 23;
+        this.numOfBoxes = (day % 2 == 1) ? 36 : 23;
         this.addKeyboard();
         this.rowMax = this.guess.length;
         this.colMax = this.guess[0].length;
@@ -62,7 +62,7 @@ export class MiniCrossword extends Phaser.Scene {
     }
 
     getPopUp () {
-      this.under = this.add.rectangle(this.center_width, 700, 450, 200, 0x97ba97, 0.0).setOrigin(0.5)//.setDepth(100);
+      this.under = this.add.rectangle(this.center_width, 700, 450, 200, 0x97ba97, 0.0).setOrigin(0.5).setDepth(100);
       this.popUp1 = this.add.bitmapText(this.center_width, 650, "lemonbold", "Almost!", 40).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
       this.popUp2 = this.add.bitmapText(this.center_width, 700, "lemonmilk", "At least one square is off...", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
       this.button = this.add.sprite(this.center_width, 760, "ellipse").setOrigin(0.5).setDisplaySize(150, 50).setAlpha(0.0);
@@ -445,6 +445,9 @@ export class MiniCrossword extends Phaser.Scene {
   }
 
   gameEnd () {
+    console.log(this.guess)
+    console.log("------------------------")
+    console.log(BOARD)
     if (this.guess === BOARD) {
       this.resultText.setText("WIN").setAlpha(1).setTint(0xffffff).setScale(2).setDropShadow(3, 4, 0x222222, 0.7);
       this.tweens.add({

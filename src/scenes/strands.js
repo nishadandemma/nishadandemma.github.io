@@ -101,9 +101,9 @@ export class Strands extends Phaser.Scene {
     }
 
     addButtons() {
-        this.hint = this.add.sprite(200, 1405, "ellipse").setOrigin(0.5).setDisplaySize(225, 75);
+        this.hint = this.add.sprite(200, 1510, "ellipse").setOrigin(0.5).setDisplaySize(225, 75);
         this.hintButton = this.add
-            .bitmapText(200, 1400, "lemonbold", "Hint", 36)
+            .bitmapText(200, 1500, "lemonbold", "Hint", 36)
             .setOrigin(0.5)
             .setTint(0x050cf8 )
           //  .setDropShadow(2, 3, 0x693600, 0.7);
@@ -117,7 +117,7 @@ export class Strands extends Phaser.Scene {
       this.tiles = [];
       //let boxY = 0;
       //let boxX = 56;
-      let x = this.center_width - (90*2.5 + 30* 2.5);
+      let x = this.center_width - (90*2.5 + 45* 2.5);
       let y = 450;
       let ind = 0
       //this.add.rectangle(250, 740, 500, 200, 0x4d4d4d).setOrigin(0.5);
@@ -127,10 +127,10 @@ export class Strands extends Phaser.Scene {
             let letter = LETTERS[i][j];
             const tile = new Tile(this, x, y, letter);
             this.tiles[i].push(tile);
-            x+=90+30
+            x+=90+45
         }
-        x = this.center_width - (90*2.5 + 30* 2.5)
-        y += 90+30
+        x = this.center_width - (90*2.5 + 45* 2.5)
+        y += 90+45
       }
     }
 
@@ -241,7 +241,7 @@ export class Strands extends Phaser.Scene {
     }
 
     addUpdateText() {
-      this.updateText = this.add.bitmapText(600, 1405, "lemonbold", this.correct + " of 8 theme words found", 25).setTint(0x000000).setOrigin(0.5)
+      this.updateText = this.add.bitmapText(600, 1510, "lemonbold", this.correct + " of 8 theme words found", 25).setTint(0x000000).setOrigin(0.5)
     }
 
     updateUpdateText() {

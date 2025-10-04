@@ -7,7 +7,7 @@ export default class Tile extends Phaser.GameObjects.Container {
         this.letter = letter;
         this.scene = scene;
         this.scene.add.existing(this);
-        this.tile = new Phaser.GameObjects.Arc(this.scene, 0, 0, 50, 0, 360, false, 0xf5ecdc).setOrigin(0.5);
+        this.tile = new Phaser.GameObjects.Arc(this.scene, 0, 0, 60, 0, 360, false, 0xf5ecdc).setOrigin(0.5);
         this.add(this.tile);
         this.hint = new Phaser.GameObjects.Sprite(this.scene, 0, 0, "hint").setOrigin(0.5).setAlpha(0.0);
         this.add(this.hint);
