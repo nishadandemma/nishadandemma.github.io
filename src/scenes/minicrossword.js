@@ -445,10 +445,16 @@ export class MiniCrossword extends Phaser.Scene {
   }
 
   gameEnd () {
-    console.log(this.guess)
-    console.log("------------------------")
-    console.log(BOARD)
-    if (this.guess === BOARD) {
+    let correct = 0;
+    for(let i = 0; i < BOARD.length; i++) {
+      for(let j = 0; j < BOARD[0].length; j++) {
+        if (BOARD[i][j] === this.guess[i][j]) { correct = 1}
+        else {correct = 0}
+      }
+    }
+    if (correct === 1) {
+    // if (this.guess === BOARD) {
+      console.log("you win")
       this.resultText.setText("WIN").setAlpha(1).setTint(0xffffff).setScale(2).setDropShadow(3, 4, 0x222222, 0.7);
       this.tweens.add({
         targets: this.resultText,
