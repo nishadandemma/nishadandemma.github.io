@@ -46,7 +46,7 @@ export class Strands extends Phaser.Scene {
         this.lastTile = null;
         this.addResult();
         this.correct = 0;
-        this.leftToGuess = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
+        this.leftToGuess = [];
         this.leftToGuess.push(spanagram);
         this.addUpdateText();
         this.addTheme();
@@ -54,7 +54,8 @@ export class Strands extends Phaser.Scene {
     }
 
     addTheme () {
-        this.theme = this.add.sprite(this.center_width, 275, "theme").setOrigin(0.5);
+        this.theme = this.add.sprite(this.center_width, 275, "theme").setOrigin(0.5).setDisplaySize(800, 200);
+        this.themeTitle = this.add.bitmapText(this.center_width, 210, "lemonmilk", "Today's theme:", 40).setOrigin(0.5)
         this.today = this.add.bitmapText(this.center_width, 300, "lemonmilk", themeWord, 45).setOrigin(0.5).setTint(0xff0000)
     }
 
@@ -63,15 +64,19 @@ export class Strands extends Phaser.Scene {
         const day = today.getDate();
         if (day % 2 == 0) {
             LETTERS = LETTERS_SAT;
-            words = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
-            spanagram = "xxxxxxxx"
-            themeWord = "Letters..."
+            words = ["DANCES", "VOWS", "IDO", "MANGALSUTRA", "RICE", "HENNA", "SHOTS"];
+            spanagram = "TRADITIONS"
+            themeWord = "What we do this weekend..."
+            this.leftToGuess = ["DANCES", "VOWS", "IDO", "MANGALSUTRA", "RICE", "HENNA", "SHOTS"];
+
         }
         else if (day % 2 !== 0) {
             LETTERS = LETTERS_SUN;
-            words = ["aaaaaaa", "bbbbb", "ccccccc", "dddd", "eeeeeee", "ffffff", "gggg"];
-            spanagram = "xxxxxxxx"
-            themeWord = "Letters..."
+            words = ["ATHENS", "MYTHOLOGY", "VASE", "EURO", "AGORA", "CRETE", "MINOAN"];
+            spanagram = "GREEKTOME"
+            themeWord = "Where we're going next..."
+            this.leftToGuess = ["ATHENS", "MYTHOLOGY", "VASE", "EURO", "AGORA", "CRETE", "MINOAN"];
+
         }
     }
 

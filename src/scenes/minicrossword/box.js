@@ -1,3 +1,6 @@
+const today = new Date();
+const day = today.getDate();
+
 export default class Box extends Phaser.GameObjects.Container {
     constructor (scene, x, y, letter, num, row, col) {
         //super('Step'); 
@@ -8,13 +11,16 @@ export default class Box extends Phaser.GameObjects.Container {
         this.col = col;
         this.letter = letter;
         this.scene = scene;
-        this.scene.add.existing(this);
+        this.scene.add.existing(this)
+        this.size = (day % 2 == 1) ? 90 : 120;
+        this.letteroffset = (day % 2 == 1) ? -30 : -50;
+        this.fontsize = (day % 2 == 1) ? 75 : 100;
         this.baseColor = (this.letter === '0') ? 0x000000 : 0xffffff
-        this.square = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 120, 120, this.baseColor).setOrigin(0.5)
+        this.square = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, this.size, this.size, this.baseColor).setOrigin(0.5)
         this.add(this.square);
-        this.num = new Phaser.GameObjects.BitmapText(this.scene, -50, -50, "lemonmilk", num, 20).setTint(0x000000).setOrigin(0.5)
+        this.num = new Phaser.GameObjects.BitmapText(this.scene, this.letteroffset, this.letteroffset, "lemonmilk", num, 20).setTint(0x000000).setOrigin(0.5)
         this.add(this.num);
-        this.display = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", "" , 100).setTint(0x000000).setOrigin(0.5, 0.65)
+        this.display = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", "" , this.fontsize).setTint(0x000000).setOrigin(0.5, 0.65)
         this.add(this.display);
         //this.tile = new Phaser.GameObjects.Sprite(this.scene, 64, 32, "letter").setOrigin(0.5);
         //this.add(this.tile);

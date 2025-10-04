@@ -18,6 +18,7 @@ export default class Box extends Phaser.GameObjects.Container {
         //this.scene.add.existing(new Phaser.GameObjects.BitmapText(this.scene, 20, 550, "pixelFont", "a", 30));
         this.wordText = new Phaser.GameObjects.BitmapText(this.scene, 0, 0, "lemonmilk", this.word, 30).setTint(0x000000).setOrigin(0.5)
         this.add(this.wordText);
+        this.wordText.setMaxWidth(175)
         this.setListeners();
 
     }

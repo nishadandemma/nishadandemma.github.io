@@ -59,34 +59,33 @@ export class Connections extends Phaser.Scene {
       const today = new Date();
       const day = today.getDate();
       if (day % 2 == 0) {
-        group1 = ["apple", "banana", "pear", "cherry"];
-        group2 = ["elm", "oak", "maple", "pine"];
-        group3 = ["peru", "canada", "japan", "india"];
-        group4 = ["blue", "red", "pink", "yellow"];
-        group1.category = "Fruits"
-        group2.category = "Trees"
-        group3.category = "Countries"
-        group4.category = "Colors"
-        group1.detail = "Apple, Banana, Pear, Cherry"
-        group2.detail = "Elm, Oak, Maple, Pine"
-        group3.detail = "Peru, Canada, Japan, India"
-        group4.detail = "Blue, Red, Pink, Yellow"
+        group1 = ["Marigold", "Turmeric", "Gold", "Mango"];
+        group2 = ["Waterfall", "Fireweed", "Hiking", "Biscuit Basin"];
+        group3 = ["History", "Foreign Language", "Crafts", "Fantasy"];
+        group4 = ["Hemphill", "North", "63rd", "Canal"];
+        group1.category = "Kinds of yellow"
+        group2.category = "Our proposal story"
+        group3.category = "Bookstore shelves we always shop"
+        group4.category = "Streets we lived on"
+        group1.detail = "Marigold, Turmeric, Gold, Mango"
+        group2.detail ="Waterfall, Fireweed, Hiking, Biscuit Basin"
+        group3.detail = "History, Foreign Language, Crafts, Fantasy"
+        group4.detail = "Hemphill, North, 63rd, Canal"
       }
       else if (day % 2 !== 0) {
-        group1 = ["apple", "banana", "pear", "cherry"];
-        group2 = ["elm", "oak", "maple", "pine"];
-        group3 = ["peru", "canada", "japan", "india"];
-        group4 = ["blue", "red", "pink", "yellow"];
-        group1.category = "Fruits"
-        group2.category = "Trees"
-        group3.category = "Countries"
-        group4.category = "Colors"
-        group1.detail = "Apple, Banana, Pear, Cherry"
-        group2.detail = "Elm, Oak, Maple, Pine"
-        group3.detail = "Peru, Canada, Japan, India"
-        group4.detail = "Blue, Red, Pink, Yellow"
+        group1 = ["Borrowed", "Blue", "Old", "New"];
+        group2 = ["Wreck", "Buzz", "Tower", "Sideways"];
+        group3 = ["Love", "Paradise", "Trouble", "Deep"];
+        group4 = ["Atwoods Pizza", "Sunset Park", "Tybee Beach", "North Ave"];
+        group1.category = "Something __ (Bridal)"
+        group2.category = "Where we met"
+        group3.category = "In ___"
+        group4.category = "Locations of firsts"
+        group1.detail = "Borrowed, Blue, Old, New"
+        group2.detail = "Wreck, Buzz, Tower, Sideways"
+        group3.detail = "Love, Paradise, Trouble, Deep"
+        group4.detail = "Atwoods Pizza, Sunset Park, Tybee Beach, North Ave"
       }
-      
       group1.color = "0x709EAC"//blue
       group2.color = "0xa084bd"//purple
       group3.color = "0xe3dc94"//yellow
@@ -220,9 +219,11 @@ export class Connections extends Phaser.Scene {
       console.log("guessing")
       let words = [];
       for (let i = 0; i < this.guess.length; i++) {
-            words.push(this.guess[i].word);
+        words.push(this.guess[i].word);
       }
-      if (this.previousGuesses.includes(words.sort())) {
+      let sorted = words.sort();
+      if (this.previousGuesses.includes(sorted)) {
+        console.log('already guessed')
         this.showAlreadyGuessedText();
         return;
       } else {
@@ -242,6 +243,7 @@ export class Connections extends Phaser.Scene {
         }
         else {
           if (this.connections.isThree()) {this.showOnlyOneText();}
+          else {this.showIncorrect();}
           this.chances[this.chancesLeft].setOpacity();
           this.chancesLeft-=1;
         } 
@@ -403,4 +405,15 @@ export class Connections extends Phaser.Scene {
         yoyo: true
       });
     } 
+
+    showIncorrect () {
+      this.onlyOne.setText("Incorrect...");
+      this.tweens.add({
+        targets: this.onlyOne,
+        duration: 800,
+        alpha: { from: 0.0, to: 1 },
+        repeat: 0,
+        yoyo: true
+      });
+    }     
 }

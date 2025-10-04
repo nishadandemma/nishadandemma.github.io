@@ -77,10 +77,10 @@ export class Wordle extends Phaser.Scene {
     const today = new Date();
     const day = today.getDate();
     if (day % 2 == 0) {
-      this.wordToGuess = "sange";
+      this.wordToGuess = "henna";
     }
     else if (day % 2 !== 0) {
-      this.wordToGuess = "weddi";
+      this.wordToGuess = "mirth";
     }
     }
 

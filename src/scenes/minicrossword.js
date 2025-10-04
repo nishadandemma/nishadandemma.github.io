@@ -16,6 +16,8 @@ let ACROSS = [];
 let DOWN = [];
 
 let clues = {};
+const today = new Date();
+const day = today.getDate();
 
 export class MiniCrossword extends Phaser.Scene {
     constructor() {
@@ -54,8 +56,8 @@ export class MiniCrossword extends Phaser.Scene {
         this.regColor = 0xffffff;
         this.setUp("Across");
         this.word = 1;
-        this.acrossClues = 5;
-        this.downClues = 5;
+        this.acrossClues = (day % 2 == 1) ? 8 : 5;
+        this.downClues = (day % 2 == 1) ? 7 : 5;
         this.addResult();
     }
 
@@ -73,24 +75,22 @@ export class MiniCrossword extends Phaser.Scene {
     }
 
     loadBoards () {
-      const today = new Date();
-      const day = today.getDate();
       if (day % 2 == 0) {
         BOARD = BOARD_SAT;
         NUM = NUM_SAT;
         ACROSS = ACROSS_SAT;
         DOWN = DOWN_SAT;
         clues = {
-        "1 Across": "SACK",
-        "5 Across": "SUSHI",
-        "6 Across": "TAPAS",
-        "7 Across": "OVERS",
-        "8 Across": "PENT",
-        "1 Down": "SUAVE",
-        "2 Down": "ASPEN",
-        "3 Down": "CHART",
-        "4 Down": "KISS",
-        "5 Down": "STOP"
+        "1 Across": "Sounds from a flock",
+        "5 Across": "Dye used for hair or mehndi",
+        "6 Across": "Divine counterparts to the AEsir in Norse Mythology",
+        "7 Across": "Finland in Finland",
+        "8 Across": "Irritation in the eye",
+        "1 Down": "A sight to see (for short)",
+        "2 Down": "Irritate",
+        "3 Down": "Japanese cartoons",
+        "4 Down": "Indian women's garment",
+        "5 Down": "Horizontal volute suspension system"
         };
         this.guess = [["0","","","",""],
                       ["","","","",""],
@@ -104,22 +104,29 @@ export class MiniCrossword extends Phaser.Scene {
         ACROSS = ACROSS_SUN;
         DOWN = DOWN_SUN;
         clues = {
-        "1 Across": "SACK",
-        "5 Across": "SUSHI",
-        "6 Across": "TAPAS",
-        "7 Across": "OVERS",
-        "8 Across": "PENT",
-        "1 Down": "SUAVE",
-        "2 Down": "ASPEN",
-        "3 Down": "CHART",
-        "4 Down": "KISS",
-        "5 Down": "STOP"
+        "1 Across": "Suffix in Marathi names denoting a place of origin",
+        "4 Across": "Possibilities",
+        "5 Across": "Sixty minutes",
+        "6 Across": "Get back on the horse",
+        "7 Across": "Krishna's grand city in Hindu mythology",
+        "8 Across": "Workplace authority on a hard metal",
+        "9 Across": "Neuromyelitis optica",
+        "10 Across": "Letter without which it is slightly tricky to construct crossword clues",
+        "1 Down": "Ted ____, DC's second Blue Beetle",
+        "2 Down": "Something into which a witch might turn you",
+        "3 Down": "Stay",
+        "4 Down": "What you might text someone you feel an obligation to meet (in short)",
+        "5 Down": "Author Cornelia or analytical therapist/actor Tobias",
+        "6 Down": "Young woman's title en Esp.",
+        "7 Down": "Finnish word for the fireweed plant"
         };
-        this.guess = [["0","","","",""],
-                      ["","","","",""],
-                      ["","","","",""],
-                      ["","","","",""],
-                      ["","","","","0"]];
+        this.guess = [["","","","0","","",""],
+                      ["","","","","","",""],
+                      ["","","","","","",""],
+                      ["","","","","","",""],
+                      ["0","","","","","","0"],
+                      ["0","0","","","","0","0"],
+                      ["0","0","0","","0","0","0"]];
       }
     }
 
@@ -199,11 +206,14 @@ export class MiniCrossword extends Phaser.Scene {
       this.squares = [];
       //let boxY = 0;
       //let boxX = 56;
-      let x = this.center_width - (120*2.16);
-      let y = 300;
+      let box_size = (day % 2 == 1) ? 90 : 120;
+      let x =  (day % 2 == 1) ? this.center_width -(box_size*3.33) : this.center_width - (box_size*2.16);
+      let y = (day % 2 == 1) ? 230 : 300;
       //this.backboard = new Phaser.GameObjects.Rectangle(this, 35, 145, 350, 350, 0x000000).setOrigin(0.5);
       //this.add(this.backboard);
-      this.add.rectangle(this.center_width, 560, 660, 660, 0x000000);
+      let backboardsize = (box_size*BOARD[0].length) + (10*(BOARD[0].length-1)) + 30
+      let backboardheight = (day % 2 == 1) ? 530 : 560;
+      this.add.rectangle(this.center_width, backboardheight, backboardsize, backboardsize, 0x000000);
       for (let i = 0; i < BOARD.length; i++) {
         this.squares.push([]);
         for (let j = 0; j < BOARD[0].length; j++) {
@@ -211,10 +221,10 @@ export class MiniCrossword extends Phaser.Scene {
             let num = NUM[i][j];
             const box = new Box(this, x, y, letter, num, i, j);
             this.squares[i].push(box);
-            x+=120+10
+            x+=box_size+10
         }
-        x = this.center_width - (120*2.16)
-        y += 120+10
+        x = (day % 2 == 1) ? this.center_width -(box_size*3.33) : this.center_width - (box_size*2.16)
+        y += box_size+10
       }
     }
 
@@ -452,6 +462,7 @@ export class MiniCrossword extends Phaser.Scene {
   addClues () {
     this.add.rectangle(this.center_width, 1000, 700, 175, 0xf5ecdc);
     this.clueText = this.add.bitmapText(this.center_width, 995, "lemonmilk", "", 40).setTint(0x000000).setOrigin(0.5)
+    this.clueText.setMaxWidth(700)
   }
 
   showClue () {
