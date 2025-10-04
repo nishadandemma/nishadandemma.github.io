@@ -62,13 +62,13 @@ export class MiniCrossword extends Phaser.Scene {
     }
 
     getPopUp () {
-      this.under = this.add.rectangle(this.center_width, 700, 450, 200, 0x97ba97, 0.0).setOrigin(0.5).setDepth(100);
-      this.popUp1 = this.add.bitmapText(this.center_width, 650, "lemonbold", "Almost!", 40).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
-      this.popUp2 = this.add.bitmapText(this.center_width, 700, "lemonmilk", "At least one square is off...", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
-      this.button = this.add.sprite(this.center_width, 760, "ellipse").setOrigin(0.5).setDisplaySize(150, 50).setAlpha(0.0);
-      this.tryAgain = this.add.bitmapText(this.center_width, 756, "lemonbold", "Try again", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)
+      this.under = this.add.rectangle(this.center_width, 185, 800, 75, 0xFA5E5C, 0.0).setOrigin(0.5);
+      this.popUp1 = this.add.bitmapText(155, 175, "lemonbold", "Almost!", 40).setTint(0x990705).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
+      this.popUp2 = this.add.bitmapText(this.center_width, 180, "lemonmilk", "At least one square is off...", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)//.setDepth(200);
+      this.button = this.add.sprite(750, 185, "ellipse").setOrigin(0.5).setDisplaySize(150, 50).setAlpha(0.0);
+      this.tryAgain = this.add.bitmapText(750, 185, "lemonbold", "Try again", 20).setTint(0x000000).setOrigin(0.5).setAlpha(0.0)
       this.button.setInteractive();
-      this.menuButton.on("pointerdown", () => {
+      this.button.on("pointerdown", () => {
           //this.sound.add("move").play(); //maybe add sound effects when clicked?
           this.setPopUp(0.0);
       });
@@ -203,6 +203,7 @@ export class MiniCrossword extends Phaser.Scene {
     }
  
     createBoard() {
+      // this.under.setDepth(100);
       this.squares = [];
       //let boxY = 0;
       //let boxX = 56;
@@ -445,14 +446,14 @@ export class MiniCrossword extends Phaser.Scene {
   }
 
   gameEnd () {
-    let correct = 0;
+    let wrong = 0;
     for(let i = 0; i < BOARD.length; i++) {
       for(let j = 0; j < BOARD[0].length; j++) {
-        if (BOARD[i][j] === this.guess[i][j]) { correct = 1}
-        else {correct = 0}
+        if (BOARD[i][j] !== this.guess[i][j]) {wrong = 1}
+        // else {wrong = 1}
       }
     }
-    if (correct === 1) {
+    if (wrong === 0) {
     // if (this.guess === BOARD) {
       console.log("you win")
       this.resultText.setText("WIN").setAlpha(1).setTint(0xffffff).setScale(2).setDropShadow(3, 4, 0x222222, 0.7);
