@@ -10,7 +10,7 @@ export class Start extends Phaser.Scene
         this.load.image('background', 'assets/background9x16.png');
         this.load.image('title', 'assets/title2.png');      
         this.load.image('wordle', 'assets/wordlebutton.png');
-        this.load.image('strands', 'assets/strandsbutton.png');
+        //this.load.image('strands', 'assets/strandsbutton.png');
         this.load.image('connections', 'assets/connectionsbutton.png');
         this.load.image('mini', 'assets/minibutton.png');
         this.load.bitmapFont(
@@ -86,7 +86,7 @@ export class Start extends Phaser.Scene
             this.wordleButton.setTint(0xffe066);
         });*/
     }
-
+/*
      addStrandsButton() {
         this.strandsButton = this.add.tileSprite(625, 800, 300, 300, 'strands');
         this.strandsButton.setInteractive();
@@ -99,9 +99,9 @@ export class Start extends Phaser.Scene
         });
         this.strandsButton.on("pointerout", () => {
             this.strandsButton.setTint(0xffe066);
-        });*/
+        });
     }
-
+*/
     addMiniCrosswordButton() {
         this.miniCrosswordButton = this.add.tileSprite(625, 1150, 300, 300, 'mini');
         this.miniCrosswordButton.setInteractive();
@@ -130,7 +130,7 @@ export class Start extends Phaser.Scene
 
         this.addConnectionsButton();
         this.addWordleButton();
-        this.addStrandsButton();
+        //this.addStrandsButton();
         this.addMiniCrosswordButton();
 
     /*   ship.anims.create({
@@ -163,11 +163,11 @@ export class Start extends Phaser.Scene
         this.scene.start("Wordle")
     }
 
-    startStrands()
+ /*   startStrands()
     {
         this.scene.start("Strands")
     }
-
+*/
     startMiniCrossword()
     {
         this.scene.start("MiniCrossword")

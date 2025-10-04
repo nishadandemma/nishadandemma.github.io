@@ -59,6 +59,7 @@ export class MiniCrossword extends Phaser.Scene {
         this.acrossClues = (day % 2 == 1) ? 8 : 5;
         this.downClues = (day % 2 == 1) ? 7 : 5;
         this.addResult();
+        this.hide = this.add.rectangle(this.center_width, 550, 800, 600, 0xFA5E5C, 0.0).setOrigin(0.5);
     }
 
     getPopUp () {
@@ -136,6 +137,7 @@ export class MiniCrossword extends Phaser.Scene {
       this.popUp2.setAlpha(alpha);
       this.button.setAlpha(alpha);
       this.tryAgain.setAlpha(alpha);
+      this.hide.setAlpha(alpha);
     }
 
     getFirstRowInColumn (col) {
@@ -446,6 +448,7 @@ export class MiniCrossword extends Phaser.Scene {
   }
 
   gameEnd () {
+    console.log("checking end")
     let wrong = 0;
     for(let i = 0; i < BOARD.length; i++) {
       for(let j = 0; j < BOARD[0].length; j++) {
