@@ -73,18 +73,20 @@ export class Connections extends Phaser.Scene {
         group4.detail = "Hemphill, North, 63rd, Canal"
       }
       else if (day % 2 !== 0) {
-        group1 = ["Borrowed", "Blue", "Old", "New"];
-        group2 = ["Wreck", "Buzz", "Tower", "Sideways"];
-        group3 = ["Love", "Paradise", "Trouble", "Deep"];
-        group4 = ["Atwoods Pizza", "Sunset Park", "Tybee Beach", "North Ave"];
-        group1.category = "Something __ (Bridal)"
-        group2.category = "Where we met"
-        group3.category = "In ___"
-        group4.category = "Locations of firsts"
-        group1.detail = "Borrowed, Blue, Old, New"
-        group2.detail = "Wreck, Buzz, Tower, Sideways"
-        group3.detail = "Love, Paradise, Trouble, Deep"
-        group4.detail = "Atwoods Pizza, Sunset Park, Tybee Beach, North Ave"
+        group3 = ["Borrowed", "Blue", "Old", "New"];
+        group4 = ["Wreck", "Buzz", "Tower", "Sideways"];
+        group1 = ["Love", "Paradise", "Trouble", "Deep"];
+        group2 = ["Atwoods Pizza", "Sunset Park", "Tybee Beach", "North Ave"];
+
+        group3.category = "Something __ (Bridal)"
+        group4.category = "Where we met"
+        group1.category = "In ___"
+        group2.category = "Locations of firsts"
+
+        group3.detail = "Borrowed, Blue, Old, New"
+        group4.detail = "Wreck, Buzz, Tower, Sideways"
+        group1.detail = "Love, Paradise, Trouble, Deep"
+        group2.detail = "Atwoods Pizza, Sunset Park, Tybee Beach, North Ave"
       }
       group1.color = "0x709EAC"//blue
       group2.color = "0xa084bd"//purple
