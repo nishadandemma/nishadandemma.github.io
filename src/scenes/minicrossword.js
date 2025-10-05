@@ -105,21 +105,21 @@ export class MiniCrossword extends Phaser.Scene {
         ACROSS = ACROSS_SUN;
         DOWN = DOWN_SUN;
         clues = {
-        "1 Across": "Suffix in Marathi names denoting a place of origin",
-        "4 Across": "Possibilities",
-        "5 Across": "Sixty minutes",
-        "6 Across": "Get back on the horse",
-        "7 Across": "Krishna's grand city in Hindu mythology",
-        "8 Across": "Workplace authority on a hard metal",
-        "9 Across": "Neuromyelitis optica",
-        "10 Across": "Letter without which it is slightly tricky to construct crossword clues",
+        "1 Across": "Suffix in Marathi names denoting a place of origin -- 4 Across: Possibilities",
+        // "4 Across": "Possibilities",
+        "7 Across": "Sixty minutes",
+        "9 Across": "Get back on the horse",
+        "10 Across": "Krishna's grand city in Hindu mythology",
+        "11 Across": "Workplace authority on a hard metal",
+        "12 Across": "Neuromyelitis optica",
+        "13 Across": "Letter without which it is slightly tricky to construct crossword clues",
         "1 Down": "Ted ____, DC's second Blue Beetle",
         "2 Down": "Something into which a witch might turn you",
         "3 Down": "Stay",
         "4 Down": "What you might text someone you feel an obligation to meet (in short)",
         "5 Down": "Author Cornelia or analytical therapist/actor Tobias",
         "6 Down": "Young woman's title en Esp.",
-        "7 Down": "Finnish word for the fireweed plant"
+        "8 Down": "Finnish word for the fireweed plant"
         };
         this.guess = [["","","","0","","",""],
                       ["","","","","","",""],
